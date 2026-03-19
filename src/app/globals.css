@@ -106,3 +106,17 @@ body {
 .stagger-children > *:nth-child(10) { animation-delay: 540ms; }
 .stagger-children > *:nth-child(11) { animation-delay: 600ms; }
 .stagger-children > *:nth-child(12) { animation-delay: 660ms; }
+
+/* Safe area for iOS bottom bar */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+/* Hide scrollbar utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

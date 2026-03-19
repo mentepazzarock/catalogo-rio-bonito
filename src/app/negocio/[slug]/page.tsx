@@ -20,7 +20,7 @@ import { Badge } from '@/components/ui/badge'
 import { CategoryIcon } from '@/components/ui/icon-map'
 import { getBusinessBySlug, mockBusinesses } from '@/lib/mock-data'
 import { formatPhone, formatCurrency, formatWhatsAppUrl, isOpenNow } from '@/lib/utils'
-import { DAYS_OF_WEEK, SITE_NAME } from '@/lib/constants'
+import { DAYS_OF_WEEK, SITE_NAME, BUSINESS_ATTRIBUTES_LABELS } from '@/lib/constants'
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -192,6 +192,23 @@ export default async function BusinessPage({ params }: PageProps) {
               <p className="text-sm text-slate-600 leading-relaxed whitespace-pre-line">
                 {business.description}
               </p>
+
+              {/* Attributes */}
+              {business.attributes && (() => {
+                const activeAttrs = Object.entries(business.attributes).filter(([, v]) => v)
+                if (activeAttrs.length === 0) return null
+                return (
+                  <div className="mt-4 pt-4 border-t border-slate-100">
+                    <div className="flex flex-wrap gap-2">
+                      {activeAttrs.map(([key]) => (
+                        <span key={key} className="inline-flex items-center gap-1.5 rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-700">
+                          {BUSINESS_ATTRIBUTES_LABELS[key] || key}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )
+              })()}
             </section>
 
             {/* Promotions */}
@@ -412,6 +429,12 @@ export default async function BusinessPage({ params }: PageProps) {
                   <a href={`https://facebook.com/${business.facebook}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-sm text-slate-600 hover:text-blue-600 transition-colors">
                     <Facebook className="h-4 w-4 text-slate-400 shrink-0" />
                     {business.facebook}
+                  </a>
+                )}
+                {business.tiktok && (
+                  <a href={`https://tiktok.com/@${business.tiktok.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-sm text-slate-600 hover:text-slate-900 transition-colors">
+                    <Globe className="h-4 w-4 text-slate-400 shrink-0" />
+                    TikTok: {business.tiktok}
                   </a>
                 )}
               </div>

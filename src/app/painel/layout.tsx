@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Store, Package, Star, CreditCard, ArrowLeft } from 'lucide-react'
+import { LayoutDashboard, Store, Package, Star, CreditCard, ArrowLeft, BarChart3, Users, Tag } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const sidebarLinks = [
@@ -10,6 +10,9 @@ const sidebarLinks = [
   { href: '/painel/perfil', label: 'Meu Perfil', icon: Store },
   { href: '/painel/produtos', label: 'Produtos/Serviços', icon: Package },
   { href: '/painel/avaliacoes', label: 'Avaliações', icon: Star },
+  { href: '/painel/analytics', label: 'Analytics', icon: BarChart3 },
+  { href: '/painel/leads', label: 'Leads', icon: Users },
+  { href: '/painel/promocoes', label: 'Promoções', icon: Tag },
   { href: '/painel/assinatura', label: 'Assinatura', icon: CreditCard },
 ]
 

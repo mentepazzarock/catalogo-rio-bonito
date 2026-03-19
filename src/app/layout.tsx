@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
+import { BottomNav } from '@/components/mobile/bottom-nav'
 import { SITE_NAME, SITE_DESCRIPTION } from '@/lib/constants'
 import './globals.css'
 
@@ -45,8 +46,9 @@ export default function RootLayout({
     <html lang="pt-BR" className={`${inter.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         <Header />
-        <main className="flex-1">{children}</main>
+        <main className="flex-1 pb-16 md:pb-0">{children}</main>
         <Footer />
+        <BottomNav />
       </body>
     </html>
   )
