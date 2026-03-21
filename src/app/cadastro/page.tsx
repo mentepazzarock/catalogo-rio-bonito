@@ -20,12 +20,13 @@ export default function CadastroPage() {
       {/* Hero */}
       <div className="bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900 relative overflow-hidden">
         <div className="absolute inset-0">
-          <div className="absolute top-0 right-1/4 w-96 h-96 bg-primary-400/20 rounded-full blur-3xl" />
+          <div className="absolute top-0 right-1/4 w-96 h-96 bg-warm-400/20 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-1/4 w-64 h-64 bg-accent-400/10 rounded-full blur-2xl" />
         </div>
         <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24 text-center">
           <h1 className="text-3xl sm:text-5xl font-extrabold text-white mb-4">
             Coloque seu negócio em
-            <span className="block text-accent-300">destaque digital</span>
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-warm-300 to-accent-300">destaque digital</span>
           </h1>
           <p className="text-lg text-primary-100 max-w-2xl mx-auto">
             Cadastre sua loja ou serviço no {SITE_NAME} e seja encontrado por milhares de consumidores em Rio Bonito
@@ -47,9 +48,8 @@ export default function CadastroPage() {
                 <div
                   key={key}
                   onClick={() => setSelectedPlan(key)}
-                  className={`relative rounded-2xl border-2 ${colors.border} ${colors.bg} p-6 cursor-pointer transition-all duration-300 ${
-                    isSelected ? 'shadow-xl -translate-y-1' : 'shadow-sm hover:shadow-md'
-                  }`}
+                  className={`relative rounded-2xl border-2 ${colors.border} ${colors.bg} p-6 cursor-pointer transition-all duration-300 ${isSelected ? 'shadow-xl -translate-y-1' : 'shadow-sm hover:shadow-md'
+                    }`}
                 >
                   {isPopular && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2">

@@ -2,15 +2,14 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Home, Store, Briefcase, Search, Menu } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { Home, Store, Wrench, Search, User } from 'lucide-react'
 
-const tabs = [
-  { href: '/', icon: Home, label: 'Início' },
-  { href: '/lojas', icon: Store, label: 'Lojas' },
-  { href: '/servicos', icon: Briefcase, label: 'Serviços' },
-  { href: '/buscar', icon: Search, label: 'Buscar' },
-  { href: '/conta', icon: Menu, label: 'Menu' },
+const navItems = [
+  { label: 'Início', href: '/', icon: Home },
+  { label: 'Lojas', href: '/lojas', icon: Store },
+  { label: 'Serviços', href: '/servicos', icon: Wrench },
+  { label: 'Buscar', href: '/buscar', icon: Search },
+  { label: 'Menu', href: '/conta', icon: User },
 ]
 
 export function BottomNav() {
@@ -20,32 +19,28 @@ export function BottomNav() {
   if (pathname.startsWith('/admin') || pathname.startsWith('/painel')) return null
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-t border-slate-200 md:hidden safe-area-bottom">
-      <div className="flex items-center justify-around h-16 px-2">
-        {tabs.map((tab) => {
-          const isActive = tab.href === '/' ? pathname === '/' : pathname.startsWith(tab.href)
+    <nav className="fixed bottom-0 inset-x-0 z-40 md:hidden bg-white/95 backdrop-blur-lg border-t border-slate-100 safe-area-bottom shadow-[0_-4px_20px_-4px_rgba(0,0,0,0.08)]">
+      <div className="flex items-center justify-around h-16 max-w-lg mx-auto px-2">
+        {navItems.map((item) => {
+          const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))
           return (
             <Link
-              key={tab.href}
-              href={tab.href}
-              className={cn(
-                'flex flex-col items-center justify-center gap-0.5 w-full h-full rounded-xl transition-all duration-200',
-                isActive
+              key={item.label}
+              href={item.href}
+              className={`relative flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-all duration-300 ${isActive
                   ? 'text-primary-600'
-                  : 'text-slate-400 active:scale-95'
-              )}
+                  : 'text-slate-400 hover:text-slate-600 active:scale-95'
+                }`}
             >
-              <div className={cn(
-                'flex items-center justify-center w-10 h-7 rounded-full transition-all duration-200',
-                isActive && 'bg-primary-100'
-              )}>
-                <tab.icon className={cn('h-5 w-5', isActive && 'scale-105')} strokeWidth={isActive ? 2.5 : 2} />
-              </div>
-              <span className={cn(
-                'text-[10px] font-medium leading-tight',
-                isActive && 'font-bold'
-              )}>
-                {tab.label}
+              {isActive && (
+                <span className="absolute -top-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-primary-500" />
+              )}
+              <item.icon
+                className={`h-5 w-5 transition-all ${isActive ? 'text-primary-600 scale-110' : ''}`}
+                strokeWidth={isActive ? 2.5 : 2}
+              />
+              <span className={`text-[10px] font-medium ${isActive ? 'font-bold text-primary-600' : ''}`}>
+                {item.label}
               </span>
             </Link>
           )

@@ -1,8 +1,9 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { Search, SlidersHorizontal, X, Clock } from 'lucide-react'
+import { Search, SlidersHorizontal, X, Clock, LayoutGrid, List } from 'lucide-react'
 import { BusinessCard } from '@/components/business/business-card'
+import { BusinessCardCompact } from '@/components/business/business-card-compact'
 import { CategoryIcon } from '@/components/ui/icon-map'
 import { EmptyState } from '@/components/shared/empty-state'
 import { mockCategories } from '@/lib/mock-data'
@@ -25,6 +26,7 @@ export function BusinessListPage({ businesses, title, subtitle, icon, emptyMessa
   const [sortBy, setSortBy] = useState<SortOption>('relevance')
   const [showOpenOnly, setShowOpenOnly] = useState(false)
   const [showFilters, setShowFilters] = useState(false)
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('list')
 
   const availableCategories = useMemo(() => {
     const catIds = new Set(businesses.flatMap((b) => b.categories.map((c) => c.id)))
@@ -100,50 +102,46 @@ export function BusinessListPage({ businesses, title, subtitle, icon, emptyMessa
             </div>
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className={`flex items-center gap-2 rounded-xl border px-4 py-3 text-sm font-medium transition-all ${
-                showFilters || hasActiveFilters
+              className={`flex items-center gap-2 rounded-xl border px-4 py-3 text-sm font-medium transition-all ${showFilters || hasActiveFilters
                   ? 'bg-primary-50 border-primary-200 text-primary-700'
                   : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
-              }`}
+                }`}
             >
               <SlidersHorizontal className="h-4 w-4" />
               <span className="hidden sm:inline">Filtros</span>
             </button>
           </div>
 
+          {/* Category pills - always visible on mobile for iFood style */}
+          <div className="mt-4 flex gap-2 overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap">
+            <button
+              onClick={() => setSelectedCategory('')}
+              className={`rounded-full px-3.5 py-2 text-xs font-semibold whitespace-nowrap transition-colors shrink-0 ${!selectedCategory ? 'bg-primary-600 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                }`}
+            >
+              Todas
+            </button>
+            {availableCategories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => setSelectedCategory(selectedCategory === cat.slug ? '' : cat.slug)}
+                className={`flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-semibold whitespace-nowrap transition-colors shrink-0 ${selectedCategory === cat.slug ? 'bg-primary-600 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  }`}
+              >
+                <CategoryIcon name={cat.icon} className="h-3.5 w-3.5" />
+                {cat.name}
+              </button>
+            ))}
+          </div>
+
           {/* Filters */}
           {showFilters && (
-            <div className="mt-4 animate-scale-in">
-              {/* Category scroll */}
-              <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap">
-                <button
-                  onClick={() => setSelectedCategory('')}
-                  className={`rounded-full px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-colors shrink-0 ${
-                    !selectedCategory ? 'bg-primary-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                  }`}
-                >
-                  Todas
-                </button>
-                {availableCategories.map((cat) => (
-                  <button
-                    key={cat.id}
-                    onClick={() => setSelectedCategory(selectedCategory === cat.slug ? '' : cat.slug)}
-                    className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-colors shrink-0 ${
-                      selectedCategory === cat.slug ? 'bg-primary-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                    }`}
-                  >
-                    <CategoryIcon name={cat.icon} className="h-3 w-3" />
-                    {cat.name}
-                  </button>
-                ))}
-              </div>
-
-              <div className="flex flex-wrap items-center gap-3 mt-3">
+            <div className="mt-3 animate-scale-in">
+              <div className="flex flex-wrap items-center gap-3">
                 <button
                   onClick={() => setShowOpenOnly(!showOpenOnly)}
-                  className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
-                    showOpenOnly ? 'bg-accent-500 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                  }`}
+                  className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${showOpenOnly ? 'bg-accent-500 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    }`}
                 >
                   <Clock className="h-3 w-3" />
                   Aberto agora
@@ -174,18 +172,47 @@ export function BusinessListPage({ businesses, title, subtitle, icon, emptyMessa
 
       {/* Results */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
-        <p className="text-sm text-slate-500 mb-5">
-          <span className="font-semibold text-slate-700">{filteredBusinesses.length}</span>{' '}
-          {filteredBusinesses.length === 1 ? 'resultado' : 'resultados'}
-          {query && <> para <span className="font-semibold text-slate-700">&ldquo;{query}&rdquo;</span></>}
-        </p>
+        <div className="flex items-center justify-between mb-5">
+          <p className="text-sm text-slate-500">
+            <span className="font-semibold text-slate-700">{filteredBusinesses.length}</span>{' '}
+            {filteredBusinesses.length === 1 ? 'resultado' : 'resultados'}
+            {query && <> para <span className="font-semibold text-slate-700">&ldquo;{query}&rdquo;</span></>}
+          </p>
+          {/* View toggle */}
+          <div className="flex bg-slate-100 rounded-lg p-0.5">
+            <button
+              onClick={() => setViewMode('list')}
+              className={`flex items-center gap-1 px-2.5 py-1.5 text-xs rounded-md transition-colors ${viewMode === 'list' ? 'bg-white text-slate-900 shadow-sm font-semibold' : 'text-slate-500'
+                }`}
+            >
+              <List className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Lista</span>
+            </button>
+            <button
+              onClick={() => setViewMode('grid')}
+              className={`flex items-center gap-1 px-2.5 py-1.5 text-xs rounded-md transition-colors ${viewMode === 'grid' ? 'bg-white text-slate-900 shadow-sm font-semibold' : 'text-slate-500'
+                }`}
+            >
+              <LayoutGrid className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Grid</span>
+            </button>
+          </div>
+        </div>
 
         {filteredBusinesses.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 stagger-children">
-            {filteredBusinesses.map((business) => (
-              <BusinessCard key={business.id} business={business} featured={business.is_featured} />
-            ))}
-          </div>
+          viewMode === 'list' ? (
+            <div className="space-y-3 stagger-children">
+              {filteredBusinesses.map((business) => (
+                <BusinessCardCompact key={business.id} business={business} />
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 stagger-children">
+              {filteredBusinesses.map((business) => (
+                <BusinessCard key={business.id} business={business} featured={business.is_featured} />
+              ))}
+            </div>
+          )
         ) : (
           <EmptyState
             icon={Search}

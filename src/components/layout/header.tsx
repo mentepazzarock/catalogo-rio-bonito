@@ -1,20 +1,33 @@
 'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
-import { Search, Menu, X, MapPin, Plus } from 'lucide-react'
+import { useState, useRef, useEffect } from 'react'
+import { Search, Menu, X, MapPin, Plus, LogIn, ChevronDown, Store, Shield, LayoutDashboard, User } from 'lucide-react'
 import { SITE_NAME } from '@/lib/constants'
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [empresasOpen, setEmpresasOpen] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setEmpresasOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   return (
-    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-slate-100">
+    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-slate-100 shadow-sm">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between gap-4">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 shrink-0">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 shadow-md shadow-primary-200">
+          <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 shadow-md shadow-primary-200/50 group-hover:shadow-primary-300/50 transition-shadow">
               <MapPin className="h-5 w-5 text-white" />
             </div>
             <div className="hidden sm:block">
@@ -27,9 +40,9 @@ export function Header() {
           <div className="hidden md:flex flex-1 max-w-lg">
             <Link
               href="/buscar"
-              className="flex w-full items-center gap-2 rounded-full bg-slate-50 border border-slate-200 px-4 py-2.5 text-sm text-slate-500 hover:border-primary-300 hover:bg-white transition-all"
+              className="flex w-full items-center gap-2.5 rounded-full bg-slate-50 border border-slate-200 px-4 py-2.5 text-sm text-slate-400 hover:border-primary-300 hover:bg-white hover:shadow-sm transition-all group"
             >
-              <Search className="h-4 w-4" />
+              <Search className="h-4 w-4 group-hover:text-primary-500 transition-colors" />
               <span>Buscar lojas, serviços, produtos...</span>
             </Link>
           </div>
@@ -48,12 +61,54 @@ export function Header() {
             >
               Explorar
             </Link>
+
+            {/* Empresas Dropdown */}
+            <div className="relative" ref={dropdownRef}>
+              <button
+                onClick={() => setEmpresasOpen(!empresasOpen)}
+                className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-slate-600 rounded-lg hover:text-primary-600 hover:bg-primary-50 transition-colors"
+              >
+                Para Empresas
+                <ChevronDown className={`h-3.5 w-3.5 transition-transform ${empresasOpen ? 'rotate-180' : ''}`} />
+              </button>
+              {empresasOpen && (
+                <div className="absolute right-0 top-full mt-1 w-56 rounded-xl bg-white border border-slate-200 shadow-lg shadow-slate-200/50 py-2 animate-scale-in z-50">
+                  <Link
+                    href="/cadastro"
+                    onClick={() => setEmpresasOpen(false)}
+                    className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-primary-50 hover:text-primary-700 transition-colors"
+                  >
+                    <Plus className="h-4 w-4 text-primary-500" />
+                    Cadastrar Negócio
+                  </Link>
+                  <Link
+                    href="/painel"
+                    onClick={() => setEmpresasOpen(false)}
+                    className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-primary-50 hover:text-primary-700 transition-colors"
+                  >
+                    <LayoutDashboard className="h-4 w-4 text-accent-500" />
+                    Painel do Lojista
+                  </Link>
+                  <div className="my-1 border-t border-slate-100" />
+                  <Link
+                    href="/admin"
+                    onClick={() => setEmpresasOpen(false)}
+                    className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-red-50 hover:text-red-700 transition-colors"
+                  >
+                    <Shield className="h-4 w-4 text-red-500" />
+                    Painel Admin
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            {/* Login Button */}
             <Link
-              href="/cadastro"
-              className="ml-2 flex items-center gap-1.5 rounded-full bg-primary-600 px-4 py-2 text-sm font-semibold text-white hover:bg-primary-700 transition-colors shadow-sm shadow-primary-200"
+              href="/login"
+              className="ml-2 flex items-center gap-1.5 rounded-full bg-primary-600 px-4 py-2 text-sm font-semibold text-white hover:bg-primary-700 transition-colors shadow-sm shadow-primary-200/50"
             >
-              <Plus className="h-4 w-4" />
-              Cadastrar Negócio
+              <LogIn className="h-4 w-4" />
+              Entrar
             </Link>
           </nav>
 
@@ -93,7 +148,25 @@ export function Header() {
             >
               Explorar
             </Link>
-            <div className="pt-2">
+            <div className="border-t border-slate-100 my-2" />
+            <span className="block px-4 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Para Empresas</span>
+            <Link
+              href="/painel"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-700 rounded-xl hover:bg-slate-50 transition-colors"
+            >
+              <LayoutDashboard className="h-4 w-4 text-accent-500" />
+              Painel do Lojista
+            </Link>
+            <Link
+              href="/admin"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-700 rounded-xl hover:bg-slate-50 transition-colors"
+            >
+              <Shield className="h-4 w-4 text-red-500" />
+              Painel Admin
+            </Link>
+            <div className="pt-2 space-y-2">
               <Link
                 href="/cadastro"
                 onClick={() => setMobileMenuOpen(false)}
@@ -101,6 +174,14 @@ export function Header() {
               >
                 <Plus className="h-4 w-4" />
                 Cadastrar Meu Negócio
+              </Link>
+              <Link
+                href="/login"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center justify-center gap-2 w-full rounded-xl border-2 border-primary-200 px-4 py-3 text-sm font-semibold text-primary-700 hover:bg-primary-50 transition-colors"
+              >
+                <LogIn className="h-4 w-4" />
+                Entrar / Criar Conta
               </Link>
             </div>
           </nav>

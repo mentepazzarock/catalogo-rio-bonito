@@ -35,7 +35,19 @@ export function FeaturedSection() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 stagger-children">
+        {/* Mobile: Horizontal scroll */}
+        <div className="sm:hidden -mx-4 px-4">
+          <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x-mandatory">
+            {featured.map((business) => (
+              <div key={business.id} className="snap-start shrink-0 w-[280px]">
+                <BusinessCard business={business} featured />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Desktop: Grid */}
+        <div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 stagger-children">
           {featured.map((business) => (
             <BusinessCard key={business.id} business={business} featured />
           ))}
