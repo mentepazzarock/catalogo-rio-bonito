@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import { Toaster } from 'sonner'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { BottomNav } from '@/components/mobile/bottom-nav'
@@ -20,6 +21,7 @@ export const metadata: Metadata = {
   description: SITE_DESCRIPTION,
   keywords: [
     'Rio Bonito',
+    'guia local',
     'guia comercial',
     'lojas Rio Bonito',
     'serviços Rio Bonito',
@@ -32,9 +34,24 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'pt_BR',
     siteName: SITE_NAME,
-    title: `${SITE_NAME} - Guia Comercial de Rio Bonito, RJ`,
+    title: `${SITE_NAME} - Descubra o melhor de Rio Bonito`,
+    description: SITE_DESCRIPTION,
+    // url: 'https://catalogo-rio-bonito.vercel.app',
+    images: [
+      {
+        url: '/og-image.jpg', // Placeholder for actual OG image
+        width: 1200,
+        height: 630,
+        alt: `${SITE_NAME} - Guia Comercial`,
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: `${SITE_NAME} - O guia da cidade`,
     description: SITE_DESCRIPTION,
   },
+  themeColor: '#ea580c', // primary-600
 }
 
 export default function RootLayout({
@@ -44,11 +61,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" className={`${inter.variable} h-full antialiased`}>
+      <head>
+        <link rel="manifest" href="/manifest.ts" />
+      </head>
       <body className="min-h-full flex flex-col">
         <Header />
         <main className="flex-1 pb-16 md:pb-0">{children}</main>
         <Footer />
         <BottomNav />
+        <Toaster position="top-center" richColors theme="light" />
       </body>
     </html>
   )

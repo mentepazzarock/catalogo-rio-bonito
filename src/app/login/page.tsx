@@ -2,11 +2,40 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Eye, EyeOff, MapPin, ArrowRight, Sparkles } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { Eye, EyeOff, MapPin, ArrowRight, Sparkles, Loader2 } from 'lucide-react'
+import { toast } from 'sonner'
 
 export default function LoginPage() {
+  const router = useRouter()
   const [isLogin, setIsLogin] = useState(true)
   const [showPassword, setShowPassword] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsLoading(true)
+
+    // Simulate API request delay
+    await new Promise((resolve) => setTimeout(resolve, 1500))
+
+    setIsLoading(false)
+
+    if (isLogin) {
+      toast.success('Login efetuado com sucesso!', {
+        description: 'Bem-vindo de volta ao painel de controle.',
+      })
+    } else {
+      toast.success('Conta criada com sucesso!', {
+        description: 'Sua conta foi configurada e está pronta.',
+      })
+    }
+
+    // Redirect securely to panel
+    setTimeout(() => {
+      router.push('/painel')
+    }, 500)
+  }
 
   return (
     <div className="min-h-screen flex">
@@ -14,7 +43,7 @@ export default function LoginPage() {
       <div className="flex-1 flex items-center justify-center p-6 sm:p-12">
         <div className="w-full max-w-md animate-fade-in">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 mb-8 group">
+          <Link href="/" className="flex items-center gap-2 mb-8 group w-fit">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 shadow-md shadow-primary-200/50">
               <MapPin className="h-5 w-5 text-white" />
             </div>
@@ -33,30 +62,34 @@ export default function LoginPage() {
           {/* Tabs */}
           <div className="flex bg-slate-100 rounded-xl p-1 mb-6">
             <button
+              type="button"
               onClick={() => setIsLogin(true)}
-              className={`flex-1 rounded-lg py-2.5 text-sm font-semibold transition-all ${isLogin ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500'
-                }`}
+              disabled={isLoading}
+              className={`flex-1 rounded-lg py-2.5 text-sm font-semibold transition-all ${isLogin ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500 hover:text-slate-700'} ${isLoading && 'opacity-50 cursor-not-allowed'}`}
             >
               Entrar
             </button>
             <button
+              type="button"
               onClick={() => setIsLogin(false)}
-              className={`flex-1 rounded-lg py-2.5 text-sm font-semibold transition-all ${!isLogin ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500'
-                }`}
+              disabled={isLoading}
+              className={`flex-1 rounded-lg py-2.5 text-sm font-semibold transition-all ${!isLogin ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500 hover:text-slate-700'} ${isLoading && 'opacity-50 cursor-not-allowed'}`}
             >
               Criar conta
             </button>
           </div>
 
           {/* Form */}
-          <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+          <form className="space-y-4" onSubmit={handleSubmit}>
             {!isLogin && (
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1.5">Nome completo</label>
                 <input
                   type="text"
+                  required
+                  disabled={isLoading}
                   placeholder="Seu nome"
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-300 transition-all"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-300 transition-all disabled:opacity-50 disabled:bg-slate-100"
                 />
               </div>
             )}
@@ -64,8 +97,10 @@ export default function LoginPage() {
               <label className="block text-sm font-medium text-slate-700 mb-1.5">E-mail</label>
               <input
                 type="email"
+                required
+                disabled={isLoading}
                 placeholder="seu@email.com"
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-300 transition-all"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-300 transition-all disabled:opacity-50 disabled:bg-slate-100"
               />
             </div>
             <div>
@@ -80,43 +115,58 @@ export default function LoginPage() {
               <div className="relative">
                 <input
                   type={showPassword ? 'text' : 'password'}
+                  required
+                  minLength={6}
+                  disabled={isLoading}
                   placeholder="••••••••"
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 pr-11 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-300 transition-all"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 pr-11 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-300 transition-all disabled:opacity-50 disabled:bg-slate-100"
                 />
                 <button
                   type="button"
+                  tabIndex={-1}
+                  disabled={isLoading}
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none disabled:opacity-50"
                 >
-                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
               </div>
             </div>
 
             <button
               type="submit"
-              className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary-600 to-primary-700 py-3 text-sm font-bold text-white hover:from-primary-700 hover:to-primary-800 transition-all shadow-sm shadow-primary-200/50"
+              disabled={isLoading}
+              className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary-600 to-primary-700 py-3 text-sm font-bold text-white hover:from-primary-700 hover:to-primary-800 transition-all shadow-sm shadow-primary-200/50 disabled:opacity-70 disabled:cursor-not-allowed active:scale-[0.98]"
             >
-              {isLogin ? 'Entrar' : 'Criar conta'}
-              <ArrowRight className="h-4 w-4" />
+              {isLoading ? (
+                <>
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                  Aguarde...
+                </>
+              ) : (
+                <>
+                  {isLogin ? 'Entrar no painel' : 'Criar minha conta'}
+                  <ArrowRight className="h-4 w-4" />
+                </>
+              )}
             </button>
           </form>
 
           {/* Divider */}
           <div className="flex items-center gap-3 my-6">
             <div className="flex-1 h-px bg-slate-200" />
-            <span className="text-xs text-slate-400">ou continue com</span>
+            <span className="text-xs text-slate-400 font-medium">ou continue com</span>
             <div className="flex-1 h-px bg-slate-200" />
           </div>
 
           {/* Social login */}
           <div className="flex gap-3">
-            <button className="flex-1 flex items-center justify-center gap-2 rounded-xl border border-slate-200 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors">
-              <svg className="h-4 w-4" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" /><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" /><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" /><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" /></svg>
+            <button disabled={isLoading} className="flex-1 flex items-center justify-center gap-2 rounded-xl border border-slate-200 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+              <svg className="h-5 w-5" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" /><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" /><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" /><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" /></svg>
               Google
             </button>
-            <button className="flex-1 flex items-center justify-center gap-2 rounded-xl border border-slate-200 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors">
-              <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" /></svg>
+            <button disabled={isLoading} className="flex-1 flex items-center justify-center gap-2 rounded-xl border border-slate-200 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+              <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" fill="#1877F2" /><path d="M15.83 12.073h-3.328v8.385A12.046 12.046 0 0024 12.073c0-5.99-4.388-10.954-10.125-11.854v2.25c.95 0 1.491-.925 1.491-1.874h-2.953c0 .002 0 .003 0 .003h-2.686c-2.741 0-4.533 1.662-4.533 4.669v1.22H7.078v3.47h3.047v8.385A11.97 11.97 0 0012 24v-8.385H9.986v-3.47h2.014v-2.18c0-1.936 1.15-3.024 2.87-3.024.81 0 1.657.145 1.657.145v1.821h-.933c-.92 0-1.206.57-1.206 1.157v2.261h2.24l-.29 3.47h-1.951V23.9a12.044 12.044 0 007.828-11.827z" fill="white" /></svg>
               Facebook
             </button>
           </div>
@@ -138,7 +188,7 @@ export default function LoginPage() {
             Mais de 50 negócios já usam o Catálogo RB para serem encontrados.
             Cadastre-se e alcance novos clientes todos os dias.
           </p>
-          <div className="mt-8 inline-flex items-center gap-2 rounded-full bg-white/10 border border-white/20 px-5 py-2 text-sm text-white">
+          <div className="mt-8 inline-flex items-center gap-2 rounded-full bg-white/10 border border-white/20 px-5 py-2 text-sm font-medium text-white shadow-lg backdrop-blur-sm">
             <MapPin className="h-4 w-4 text-accent-300" />
             Rio Bonito, RJ
           </div>
