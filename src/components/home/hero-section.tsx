@@ -1,100 +1,100 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { Search, MapPin, ArrowRight, Sparkles } from 'lucide-react'
+import Link from 'next/link'
+import { Search, Sparkles, ArrowRight } from 'lucide-react'
+import { mockBusinesses } from '@/lib/mock-data'
+import { AnimatedCounter, MotionWrapper } from '@/components/ui/motion-wrapper'
 
 export function HeroSection() {
-  const [query, setQuery] = useState('')
-  const router = useRouter()
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (query.trim()) {
-      router.push(`/buscar?q=${encodeURIComponent(query.trim())}`)
-    } else {
-      router.push('/buscar')
-    }
-  }
+  const totalBusinesses = mockBusinesses.length
+  const totalReviews = mockBusinesses.reduce((acc, b) => acc + b.total_reviews, 0)
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900">
+    <section className="relative bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900 overflow-hidden">
       {/* Background decorations */}
       <div className="absolute inset-0">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-warm-400/20 rounded-full blur-3xl animate-pulse-soft" />
-        <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-primary-300/15 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-0 w-64 h-64 bg-accent-400/10 rounded-full blur-3xl" />
-        {/* Grid pattern */}
-        <div className="absolute inset-0 opacity-[0.03]" style={{
-          backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)',
-          backgroundSize: '48px 48px'
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-warm-400/15 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-accent-400/10 rounded-full blur-2xl" />
+        <div className="absolute inset-0 opacity-[0.04]" style={{
+          backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)',
+          backgroundSize: '32px 32px',
         }} />
       </div>
 
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24 lg:py-32">
-        <div className="max-w-3xl mx-auto text-center">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 px-4 py-1.5 mb-6 animate-fade-in">
-            <MapPin className="h-4 w-4 text-accent-300" />
-            <span className="text-sm font-medium text-white/90">Rio Bonito, RJ</span>
-            <Sparkles className="h-3.5 w-3.5 text-warm-300" />
-          </div>
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24 lg:py-28">
+        <div className="text-center">
+          <MotionWrapper variant="fade-up" delay={0}>
+            <div className="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 px-4 py-1.5 mb-6">
+              <Sparkles className="h-4 w-4 text-warm-300" />
+              <span className="text-sm font-medium text-white/90">O guia comercial de Rio Bonito</span>
+            </div>
+          </MotionWrapper>
 
-          {/* Title */}
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight mb-4 animate-slide-up">
-            Tudo de Rio Bonito
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-warm-300 to-accent-300">em um só lugar</span>
-          </h1>
+          <MotionWrapper variant="fade-up" delay={0.1}>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-[1.1] mb-4">
+              Descubra o melhor de
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-warm-300 via-warm-200 to-accent-300">
+                Rio Bonito
+              </span>
+            </h1>
+          </MotionWrapper>
 
-          {/* Subtitle */}
-          <p className="text-lg sm:text-xl text-primary-100 max-w-xl mx-auto mb-8 animate-slide-up leading-relaxed">
-            Encontre as melhores lojas, restaurantes e profissionais da cidade.
-            Apoie o comércio local!
-          </p>
+          <MotionWrapper variant="fade-up" delay={0.2}>
+            <p className="text-lg text-primary-100 max-w-xl mx-auto mb-8 leading-relaxed">
+              Encontre lojas, serviços e profissionais perto de você.
+              Tudo em um só lugar, fácil e rápido.
+            </p>
+          </MotionWrapper>
 
-          {/* Search */}
-          <form onSubmit={handleSearch} className="max-w-xl mx-auto animate-slide-up">
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="O que você procura? Ex: pizzaria, cabeleireiro..."
-                className="w-full rounded-2xl bg-white pl-12 pr-32 py-4 text-base text-slate-900 placeholder:text-slate-400 shadow-2xl shadow-primary-900/30 focus:outline-none focus:ring-2 focus:ring-accent-400/50"
-              />
-              <button
-                type="submit"
-                className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-primary-600 to-primary-700 px-5 py-2.5 text-sm font-semibold text-white hover:from-primary-700 hover:to-primary-800 transition-all shadow-sm"
-              >
+          {/* Search CTA */}
+          <MotionWrapper variant="fade-up" delay={0.3}>
+            <Link
+              href="/buscar"
+              className="group mx-auto flex max-w-xl items-center gap-3 rounded-2xl bg-white shadow-xl shadow-black/10 px-5 py-4 hover:shadow-2xl hover:shadow-black/15 transition-all duration-300"
+            >
+              <Search className="h-5 w-5 text-slate-400 group-hover:text-primary-500 transition-colors shrink-0" />
+              <span className="text-sm sm:text-base text-slate-400 flex-1 text-left">
+                Buscar lojas, serviços, produtos...
+              </span>
+              <span className="flex items-center gap-1 rounded-xl bg-primary-600 px-4 py-2 text-sm font-bold text-white group-hover:bg-primary-700 transition-colors shrink-0">
                 Buscar
                 <ArrowRight className="h-4 w-4" />
-              </button>
-            </div>
-          </form>
+              </span>
+            </Link>
+          </MotionWrapper>
 
-          {/* Quick stats */}
-          <div className="mt-12 grid grid-cols-3 gap-4 max-w-md mx-auto animate-fade-in">
-            <div className="text-center">
-              <div className="text-2xl sm:text-3xl font-extrabold text-white">50+</div>
-              <div className="text-xs sm:text-sm text-primary-200">Negócios</div>
+          {/* Stats */}
+          <MotionWrapper variant="fade-up" delay={0.5}>
+            <div className="mt-12 flex items-center justify-center gap-8 sm:gap-12">
+              <div className="text-center">
+                <div className="text-2xl sm:text-3xl font-extrabold text-white">
+                  <AnimatedCounter value={totalBusinesses} suffix="+" />
+                </div>
+                <p className="text-xs sm:text-sm text-primary-200 mt-0.5">Negócios</p>
+              </div>
+              <div className="h-8 w-px bg-white/20" />
+              <div className="text-center">
+                <div className="text-2xl sm:text-3xl font-extrabold text-white">
+                  <AnimatedCounter value={totalReviews} suffix="+" />
+                </div>
+                <p className="text-xs sm:text-sm text-primary-200 mt-0.5">Avaliações</p>
+              </div>
+              <div className="h-8 w-px bg-white/20" />
+              <div className="text-center">
+                <div className="text-2xl sm:text-3xl font-extrabold text-white">
+                  <AnimatedCounter value={15} />
+                </div>
+                <p className="text-xs sm:text-sm text-primary-200 mt-0.5">Categorias</p>
+              </div>
             </div>
-            <div className="text-center">
-              <div className="text-2xl sm:text-3xl font-extrabold text-white">15</div>
-              <div className="text-xs sm:text-sm text-primary-200">Categorias</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl sm:text-3xl font-extrabold text-white">1000+</div>
-              <div className="text-xs sm:text-sm text-primary-200">Avaliações</div>
-            </div>
-          </div>
+          </MotionWrapper>
         </div>
       </div>
 
-      {/* Bottom wave */}
+      {/* Wave */}
       <div className="absolute bottom-0 left-0 right-0">
-        <svg viewBox="0 0 1440 60" fill="none" className="w-full">
-          <path d="M0 60V20C240 0 480 40 720 30C960 20 1200 0 1440 20V60H0Z" fill="white" />
+        <svg viewBox="0 0 1440 60" fill="none" className="w-full h-auto">
+          <path d="M0 60V30C240 0 480 0 720 30C960 60 1200 60 1440 30V60H0Z" fill="var(--color-background)" />
         </svg>
       </div>
     </section>

@@ -8,7 +8,16 @@ import { SITE_NAME } from '@/lib/constants'
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [empresasOpen, setEmpresasOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
+
+  // Scroll effect
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 10)
+    handleScroll()
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -22,7 +31,12 @@ export function Header() {
   }, [])
 
   return (
-    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-slate-100 shadow-sm">
+    <header
+      className={`sticky top-0 z-50 transition-all duration-300 ${scrolled
+          ? 'bg-white/85 backdrop-blur-xl border-b border-slate-200/60 shadow-sm'
+          : 'bg-white/50 backdrop-blur-md border-b border-transparent'
+        }`}
+    >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between gap-4">
           {/* Logo */}
@@ -40,7 +54,7 @@ export function Header() {
           <div className="hidden md:flex flex-1 max-w-lg">
             <Link
               href="/buscar"
-              className="flex w-full items-center gap-2.5 rounded-full bg-slate-50 border border-slate-200 px-4 py-2.5 text-sm text-slate-400 hover:border-primary-300 hover:bg-white hover:shadow-sm transition-all group"
+              className="flex w-full items-center gap-2.5 rounded-full bg-slate-50/80 border border-slate-200 px-4 py-2.5 text-sm text-slate-400 hover:border-primary-300 hover:bg-white hover:shadow-sm transition-all group"
             >
               <Search className="h-4 w-4 group-hover:text-primary-500 transition-colors" />
               <span>Buscar lojas, serviços, produtos...</span>
@@ -69,10 +83,10 @@ export function Header() {
                 className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-slate-600 rounded-lg hover:text-primary-600 hover:bg-primary-50 transition-colors"
               >
                 Para Empresas
-                <ChevronDown className={`h-3.5 w-3.5 transition-transform ${empresasOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${empresasOpen ? 'rotate-180' : ''}`} />
               </button>
               {empresasOpen && (
-                <div className="absolute right-0 top-full mt-1 w-56 rounded-xl bg-white border border-slate-200 shadow-lg shadow-slate-200/50 py-2 animate-scale-in z-50">
+                <div className="absolute right-0 top-full mt-1 w-56 rounded-xl bg-white/95 backdrop-blur-lg border border-slate-200 shadow-xl shadow-slate-200/50 py-2 animate-scale-in z-50">
                   <Link
                     href="/cadastro"
                     onClick={() => setEmpresasOpen(false)}
@@ -105,7 +119,7 @@ export function Header() {
             {/* Login Button */}
             <Link
               href="/login"
-              className="ml-2 flex items-center gap-1.5 rounded-full bg-primary-600 px-4 py-2 text-sm font-semibold text-white hover:bg-primary-700 transition-colors shadow-sm shadow-primary-200/50"
+              className="ml-2 flex items-center gap-1.5 rounded-full bg-primary-600 px-4 py-2 text-sm font-semibold text-white hover:bg-primary-700 transition-colors shadow-sm shadow-primary-200/50 active:scale-95"
             >
               <LogIn className="h-4 w-4" />
               Entrar
@@ -132,7 +146,7 @@ export function Header() {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-slate-100 bg-white animate-scale-in">
+        <div className="md:hidden border-t border-slate-100 bg-white/95 backdrop-blur-xl animate-scale-in">
           <nav className="mx-auto max-w-7xl px-4 py-4 space-y-1">
             <Link
               href="/categorias"
@@ -170,7 +184,7 @@ export function Header() {
               <Link
                 href="/cadastro"
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center justify-center gap-2 w-full rounded-xl bg-primary-600 px-4 py-3 text-sm font-semibold text-white hover:bg-primary-700 transition-colors"
+                className="flex items-center justify-center gap-2 w-full rounded-xl bg-primary-600 px-4 py-3 text-sm font-semibold text-white hover:bg-primary-700 transition-colors active:scale-[0.98]"
               >
                 <Plus className="h-4 w-4" />
                 Cadastrar Meu Negócio
@@ -178,7 +192,7 @@ export function Header() {
               <Link
                 href="/login"
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center justify-center gap-2 w-full rounded-xl border-2 border-primary-200 px-4 py-3 text-sm font-semibold text-primary-700 hover:bg-primary-50 transition-colors"
+                className="flex items-center justify-center gap-2 w-full rounded-xl border-2 border-primary-200 px-4 py-3 text-sm font-semibold text-primary-700 hover:bg-primary-50 transition-colors active:scale-[0.98]"
               >
                 <LogIn className="h-4 w-4" />
                 Entrar / Criar Conta
