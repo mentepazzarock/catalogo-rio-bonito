@@ -33,8 +33,8 @@ export function Header() {
   return (
     <header
       className={`sticky top-0 z-50 transition-all duration-300 ${scrolled
-          ? 'bg-white/85 backdrop-blur-xl border-b border-slate-200/60 shadow-sm'
-          : 'bg-white/50 backdrop-blur-md border-b border-transparent'
+        ? 'bg-white/85 backdrop-blur-xl border-b border-slate-200/60 shadow-sm'
+        : 'bg-white/50 backdrop-blur-md border-b border-transparent'
         }`}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -75,6 +75,12 @@ export function Header() {
             >
               Explorar
             </Link>
+            <Link
+              href="/favoritos"
+              className="px-3 py-2 text-sm font-medium text-slate-600 rounded-lg hover:text-primary-600 hover:bg-primary-50 transition-colors"
+            >
+              Favoritos
+            </Link>
 
             {/* Empresas Dropdown */}
             <div className="relative" ref={dropdownRef}>
@@ -88,7 +94,7 @@ export function Header() {
               {empresasOpen && (
                 <div className="absolute right-0 top-full mt-1 w-56 rounded-xl bg-white/95 backdrop-blur-lg border border-slate-200 shadow-xl shadow-slate-200/50 py-2 animate-scale-in z-50">
                   <Link
-                    href="/cadastro"
+                    href="/para-empresas"
                     onClick={() => setEmpresasOpen(false)}
                     className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-primary-50 hover:text-primary-700 transition-colors"
                   >
@@ -182,7 +188,7 @@ export function Header() {
             </Link>
             <div className="pt-2 space-y-2">
               <Link
-                href="/cadastro"
+                href="/para-empresas"
                 onClick={() => setMobileMenuOpen(false)}
                 className="flex items-center justify-center gap-2 w-full rounded-xl bg-primary-600 px-4 py-3 text-sm font-semibold text-white hover:bg-primary-700 transition-colors active:scale-[0.98]"
               >

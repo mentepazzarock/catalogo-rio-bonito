@@ -3,6 +3,7 @@ import { MapPin, Phone, Clock, BadgeCheck, Tag, Star } from 'lucide-react'
 import { StarRating } from '@/components/ui/star-rating'
 import { Badge } from '@/components/ui/badge'
 import { CategoryIcon } from '@/components/ui/icon-map'
+import { FavoriteButton } from '@/components/ui/favorite-button'
 import { formatPhone, isOpenNow, getInitials } from '@/lib/utils'
 import type { BusinessWithDetails } from '@/types/database'
 
@@ -59,7 +60,8 @@ export function BusinessCard({ business, featured = false }: BusinessCardProps) 
         </div>
 
         {/* Badges */}
-        <div className="absolute top-3 right-3 flex gap-1.5">
+        <div className="absolute top-3 right-3 flex gap-1.5 items-center">
+          <FavoriteButton businessId={business.id} />
           {featured && (
             <Badge variant="warning" size="sm">
               <Star className="h-3 w-3 mr-0.5 fill-warm-600" />

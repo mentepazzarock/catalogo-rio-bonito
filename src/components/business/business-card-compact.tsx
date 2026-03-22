@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { MapPin, Clock, BadgeCheck, Star, Tag } from 'lucide-react'
 import { CategoryIcon } from '@/components/ui/icon-map'
+import { FavoriteButton } from '@/components/ui/favorite-button'
 import { formatPhone, isOpenNow, getInitials } from '@/lib/utils'
 import type { BusinessWithDetails } from '@/types/database'
 
@@ -67,18 +68,21 @@ export function BusinessCardCompact({ business }: BusinessCardCompactProps) {
             </div>
 
             {/* Right side: Status + Promo */}
-            <div className="shrink-0 flex flex-col items-end gap-1.5">
-                <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold ${open ? 'bg-accent-100 text-accent-700' : 'bg-red-50 text-red-600'
-                    }`}>
-                    <Clock className="h-2.5 w-2.5" />
-                    {open ? 'Aberto' : 'Fechado'}
-                </span>
-                {hasPromotion && (
-                    <span className="inline-flex items-center gap-0.5 rounded-full bg-accent-50 px-2 py-0.5 text-[10px] font-bold text-accent-700">
-                        <Tag className="h-2.5 w-2.5" />
-                        Oferta
+            <div className="shrink-0 flex flex-col items-end justify-between self-stretch py-1 gap-2">
+                <FavoriteButton businessId={business.id} />
+                <div className="flex flex-col items-end gap-1.5 mt-auto">
+                    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold ${open ? 'bg-accent-100 text-accent-700' : 'bg-red-50 text-red-600'
+                        }`}>
+                        <Clock className="h-2.5 w-2.5" />
+                        {open ? 'Aberto' : 'Fechado'}
                     </span>
-                )}
+                    {hasPromotion && (
+                        <span className="inline-flex items-center gap-0.5 rounded-full bg-accent-50 px-2 py-0.5 text-[10px] font-bold text-accent-700">
+                            <Tag className="h-2.5 w-2.5" />
+                            Oferta
+                        </span>
+                    )}
+                </div>
             </div>
         </Link>
     )

@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Plus, Eye, Users, TrendingUp, Star, ArrowRight } from 'lucide-react'
+import { Heart, Star, Sparkles, MapPin, ArrowRight, Building2 } from 'lucide-react'
 
 export function CTASection() {
   return (
@@ -11,48 +11,57 @@ export function CTASection() {
       </div>
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
+        <div className="text-center mb-10">
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4">
-            Tem um negócio em Rio Bonito?
+            Aproveite o melhor de Rio Bonito
           </h2>
           <p className="text-lg text-primary-100 max-w-2xl mx-auto">
-            Cadastre-se no Catálogo e aumente sua presença digital.
-            Milhares de pessoas já pesquisam aqui!
+            Crie sua conta gratuita para salvar seus locais favoritos, deixar avaliações e receber ofertas exclusivas.
           </p>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 max-w-4xl mx-auto mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 max-w-4xl mx-auto mb-10">
           {[
-            { icon: Eye, label: 'Visibilidade local', desc: 'Apareça para quem procura' },
-            { icon: Users, label: 'Novos clientes', desc: 'Aumente seu público' },
-            { icon: Star, label: 'Avaliações', desc: 'Construa reputação' },
-            { icon: TrendingUp, label: 'Crescimento', desc: 'Acompanhe métricas' },
+            { icon: Heart, label: 'Salve Favoritos', desc: 'Monte sua lista VIP de lugares' },
+            { icon: Star, label: 'Avalie e Comente', desc: 'Ajude a comunidade local' },
+            { icon: Sparkles, label: 'Ofertas Exclusivas', desc: 'Cupons direto no seu celular' },
           ].map((benefit) => (
             <div
               key={benefit.label}
               className="flex flex-col items-center text-center rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 p-5 sm:p-6 hover:bg-white/15 transition-all"
             >
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20 mb-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/20 mb-3 shadow-inner">
                 <benefit.icon className="h-6 w-6 text-white" />
               </div>
-              <h3 className="text-sm font-bold text-white mb-1">{benefit.label}</h3>
-              <p className="text-xs text-primary-200">{benefit.desc}</p>
+              <h3 className="text-base font-bold text-white mb-1">{benefit.label}</h3>
+              <p className="text-sm text-primary-200">{benefit.desc}</p>
             </div>
           ))}
         </div>
 
-        <div className="text-center">
+        <div className="text-center flex flex-col items-center">
           <Link
             href="/cadastro"
-            className="inline-flex items-center gap-2 rounded-2xl bg-white px-8 py-4 text-base font-bold text-primary-700 hover:bg-primary-50 transition-colors shadow-xl shadow-primary-900/30"
+            className="inline-flex items-center gap-2 rounded-2xl bg-white px-8 py-4 text-base font-bold text-primary-700 hover:bg-primary-50 transition-colors shadow-xl shadow-primary-900/30 active:scale-[0.98]"
           >
-            <Plus className="h-5 w-5" />
-            Cadastrar Meu Negócio
+            <MapPin className="h-5 w-5" />
+            Criar Minha Conta Grátis
             <ArrowRight className="h-5 w-5" />
           </Link>
-          <p className="mt-4 text-sm text-primary-200">
-            A partir de R$100/mês • Sem fidelidade
-          </p>
+
+          <div className="mt-12 pt-6 border-t border-white/10 flex items-center justify-center gap-2">
+            <span className="text-sm text-primary-200">
+              Você é dono(a) de um negócio?
+            </span>
+            <Link
+              href="/para-empresas"
+              className="text-sm font-bold text-white hover:text-warm-300 transition-colors flex items-center gap-1 group"
+            >
+              <Building2 className="h-4 w-4" />
+              Anuncie aqui no Catálogo
+              <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
+            </Link>
+          </div>
         </div>
       </div>
     </section>
