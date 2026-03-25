@@ -1,7 +1,5 @@
-import React from 'react'
-import LoginPage from '@/app/login/page'
+import { redirect } from 'next/navigation'
 
-export default function CadastroConsumerPage() {
-    // Directly point consumer registrations to the login/auth flow that we already made robust.
-    return <LoginPage />
+export default function CadastroPage() {
+  redirect('/login')
 }

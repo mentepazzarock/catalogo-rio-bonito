@@ -1,15 +1,32 @@
-import { Eye, MousePointer, MessageCircle, Star, TrendingUp, Users } from 'lucide-react'
-import { mockBusinesses } from '@/lib/mock-data'
+import { Eye, MessageCircle, Star, TrendingUp } from 'lucide-react'
+import { requireBusinessOwner } from '@/lib/dal'
+import { getBusinessesByOwner } from '@/lib/queries'
+import { redirect } from 'next/navigation'
 
-export default function PainelPage() {
-  // Demo: using first business as the logged-in user's business
-  const business = mockBusinesses[0]
+export default async function PainelPage() {
+  const { user } = await requireBusinessOwner()
+  const businesses = await getBusinessesByOwner(user.id)
+
+  if (businesses.length === 0) {
+    return (
+      <div className="space-y-6">
+        <div className="rounded-2xl bg-gradient-to-r from-primary-600 to-primary-800 p-6 text-white">
+          <h2 className="text-xl font-bold mb-1">Bem-vindo!</h2>
+          <p className="text-primary-100 text-sm">
+            Voce ainda nao possui um negocio cadastrado. Entre em contato com o administrador para registrar seu negocio.
+          </p>
+        </div>
+      </div>
+    )
+  }
+
+  const business = businesses[0]
 
   const stats = [
-    { label: 'Visualizações', value: '1.248', change: '+12%', icon: Eye, color: 'bg-primary-50 text-primary-600' },
-    { label: 'Cliques WhatsApp', value: '86', change: '+8%', icon: MessageCircle, color: 'bg-accent-50 text-accent-600' },
-    { label: 'Avaliações', value: String(business.total_reviews), change: '+3', icon: Star, color: 'bg-warm-50 text-warm-600' },
-    { label: 'Nota Média', value: business.average_rating.toFixed(1), change: '0', icon: TrendingUp, color: 'bg-purple-50 text-purple-600' },
+    { label: 'Visualizacoes', value: business.total_views.toLocaleString(), change: '', icon: Eye, color: 'bg-primary-50 text-primary-600' },
+    { label: 'Cliques WhatsApp', value: business.total_whatsapp_clicks.toLocaleString(), change: '', icon: MessageCircle, color: 'bg-accent-50 text-accent-600' },
+    { label: 'Avaliacoes', value: String(business.total_reviews), change: '', icon: Star, color: 'bg-warm-50 text-warm-600' },
+    { label: 'Nota Media', value: business.average_rating.toFixed(1), change: '', icon: TrendingUp, color: 'bg-purple-50 text-purple-600' },
   ]
 
   return (
@@ -18,7 +35,7 @@ export default function PainelPage() {
       <div className="rounded-2xl bg-gradient-to-r from-primary-600 to-primary-800 p-6 text-white">
         <h2 className="text-xl font-bold mb-1">Bem-vindo de volta!</h2>
         <p className="text-primary-100 text-sm">
-          Aqui está um resumo do seu negócio <strong>{business.name}</strong> este mês.
+          Aqui esta um resumo do seu negocio <strong>{business.name}</strong> este mes.
         </p>
       </div>
 
@@ -37,10 +54,10 @@ export default function PainelPage() {
 
       {/* Recent Reviews */}
       <div className="rounded-2xl bg-white border border-slate-200 p-6">
-        <h3 className="text-base font-bold text-slate-900 mb-4">Últimas Avaliações</h3>
+        <h3 className="text-base font-bold text-slate-900 mb-4">Ultimas Avaliacoes</h3>
         {business.reviews.length > 0 ? (
           <div className="space-y-4">
-            {business.reviews.map((review) => (
+            {business.reviews.slice(0, 5).map((review) => (
               <div key={review.id} className="flex gap-3 pb-4 border-b border-slate-100 last:border-0 last:pb-0">
                 <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-100 text-primary-700 text-sm font-bold">
                   {review.user_name[0]}
@@ -63,7 +80,7 @@ export default function PainelPage() {
             ))}
           </div>
         ) : (
-          <p className="text-sm text-slate-500">Nenhuma avaliação ainda.</p>
+          <p className="text-sm text-slate-500">Nenhuma avaliacao ainda.</p>
         )}
       </div>
 
@@ -73,15 +90,15 @@ export default function PainelPage() {
         <ul className="space-y-2 text-sm text-slate-600">
           <li className="flex items-start gap-2">
             <span className="text-warm-500">1.</span>
-            Adicione fotos profissionais do seu negócio para atrair mais clientes
+            Adicione fotos profissionais do seu negocio para atrair mais clientes
           </li>
           <li className="flex items-start gap-2">
             <span className="text-warm-500">2.</span>
-            Mantenha seus horários e preços sempre atualizados
+            Mantenha seus horarios e precos sempre atualizados
           </li>
           <li className="flex items-start gap-2">
             <span className="text-warm-500">3.</span>
-            Responda às avaliações dos clientes para mostrar atenção e cuidado
+            Responda as avaliacoes dos clientes para mostrar atencao e cuidado
           </li>
         </ul>
       </div>

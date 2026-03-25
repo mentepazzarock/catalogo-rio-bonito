@@ -2,13 +2,17 @@
 
 import Link from 'next/link'
 import { Search, Sparkles, ArrowRight } from 'lucide-react'
-import { mockBusinesses } from '@/lib/mock-data'
 import { AnimatedCounter, MotionWrapper } from '@/components/ui/motion-wrapper'
 
-export function HeroSection() {
-  const totalBusinesses = mockBusinesses.length
-  const totalReviews = mockBusinesses.reduce((acc, b) => acc + b.total_reviews, 0)
+interface HeroSectionProps {
+  stats: {
+    totalBusinesses: number
+    totalCategories: number
+    totalReviews: number
+  }
+}
 
+export function HeroSection({ stats }: HeroSectionProps) {
   return (
     <section className="relative bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900 overflow-hidden">
       {/* Background decorations */}
@@ -68,21 +72,21 @@ export function HeroSection() {
             <div className="mt-12 flex items-center justify-center gap-8 sm:gap-12">
               <div className="text-center">
                 <div className="text-2xl sm:text-3xl font-extrabold text-white">
-                  <AnimatedCounter value={totalBusinesses} suffix="+" />
+                  <AnimatedCounter value={stats.totalBusinesses} suffix="+" />
                 </div>
                 <p className="text-xs sm:text-sm text-primary-200 mt-0.5">Negócios</p>
               </div>
               <div className="h-8 w-px bg-white/20" />
               <div className="text-center">
                 <div className="text-2xl sm:text-3xl font-extrabold text-white">
-                  <AnimatedCounter value={totalReviews} suffix="+" />
+                  <AnimatedCounter value={stats.totalReviews} suffix="+" />
                 </div>
                 <p className="text-xs sm:text-sm text-primary-200 mt-0.5">Avaliações</p>
               </div>
               <div className="h-8 w-px bg-white/20" />
               <div className="text-center">
                 <div className="text-2xl sm:text-3xl font-extrabold text-white">
-                  <AnimatedCounter value={15} />
+                  <AnimatedCounter value={stats.totalCategories} />
                 </div>
                 <p className="text-xs sm:text-sm text-primary-200 mt-0.5">Categorias</p>
               </div>

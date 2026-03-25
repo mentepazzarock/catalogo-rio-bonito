@@ -11,7 +11,7 @@ export type EventType = 'view' | 'phone_click' | 'whatsapp_click' | 'website_cli
 export interface UserProfile {
   id: string
   email: string
-  name: string
+  full_name: string
   avatar_url: string | null
   phone: string | null
   role: UserRole

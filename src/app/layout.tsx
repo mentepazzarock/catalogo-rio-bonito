@@ -4,6 +4,7 @@ import { Toaster } from 'sonner'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { BottomNav } from '@/components/mobile/bottom-nav'
+import { getUser, getUserProfile } from '@/lib/dal'
 import { SITE_NAME, SITE_DESCRIPTION } from '@/lib/constants'
 import './globals.css'
 
@@ -54,18 +55,28 @@ export const metadata: Metadata = {
   themeColor: '#ea580c', // primary-600
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const [user, profile] = await Promise.all([getUser(), getUserProfile()])
+
+  const headerUser = user
+    ? {
+        name: profile?.full_name ?? user.user_metadata?.full_name ?? null,
+        email: user.email ?? null,
+        role: profile?.role ?? null,
+      }
+    : null
+
   return (
     <html lang="pt-BR" className={`${inter.variable} h-full antialiased`}>
       <head>
         <link rel="manifest" href="/manifest.ts" />
       </head>
       <body className="min-h-full flex flex-col">
-        <Header />
+        <Header user={headerUser} />
         <main className="flex-1 pb-16 md:pb-0">{children}</main>
         <Footer />
         <BottomNav />

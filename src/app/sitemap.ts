@@ -1,38 +1,44 @@
 import { MetadataRoute } from 'next'
-import { mockBusinesses, mockCategories } from '@/lib/mock-data'
+import { createClient } from '@/lib/supabase-server'
 
-export default function sitemap(): MetadataRoute.Sitemap {
-    const baseUrl = 'https://catalogo-rio-bonito.vercel.app'
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://catalogoriobonito.com.br'
 
-    // Static routes
-    const staticRoutes = [
-        '',
-        '/buscar',
-        '/categorias',
-        '/login',
-        '/cadastro',
-    ].map((route) => ({
-        url: `${baseUrl}${route}`,
-        lastModified: new Date(),
-        changeFrequency: 'daily' as const,
-        priority: route === '' ? 1 : 0.8,
-    }))
+  const supabase = await createClient()
 
-    // Categories routes
-    const categoryRoutes = mockCategories.map((cat) => ({
-        url: `${baseUrl}/buscar?categoria=${cat.slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly' as const,
-        priority: 0.6,
-    }))
+  const [{ data: businesses }, { data: categories }] = await Promise.all([
+    supabase.from('businesses').select('slug, updated_at').eq('is_active', true),
+    supabase.from('categories').select('slug').eq('is_active', true),
+  ])
 
-    // Business detail routes
-    const businessRoutes = mockBusinesses.map((business) => ({
-        url: `${baseUrl}/negocio/${business.slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly' as const,
-        priority: 0.7,
-    }))
+  const staticRoutes = [
+    '',
+    '/buscar',
+    '/categorias',
+    '/login',
+    '/lojas',
+    '/servicos',
+    '/para-empresas',
+  ].map((route) => ({
+    url: `${baseUrl}${route}`,
+    lastModified: new Date(),
+    changeFrequency: 'daily' as const,
+    priority: route === '' ? 1 : 0.8,
+  }))
 
-    return [...staticRoutes, ...categoryRoutes, ...businessRoutes]
+  const categoryRoutes = (categories ?? []).map((cat) => ({
+    url: `${baseUrl}/buscar?categoria=${cat.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.6,
+  }))
+
+  const businessRoutes = (businesses ?? []).map((business) => ({
+    url: `${baseUrl}/negocio/${business.slug}`,
+    lastModified: new Date(business.updated_at || Date.now()),
+    changeFrequency: 'weekly' as const,
+    priority: 0.7,
+  }))
+
+  return [...staticRoutes, ...categoryRoutes, ...businessRoutes]
 }

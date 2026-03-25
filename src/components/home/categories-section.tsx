@@ -1,8 +1,7 @@
 import Link from 'next/link'
 import { CategoryIcon } from '@/components/ui/icon-map'
-import { mockCategories } from '@/lib/mock-data'
+import type { Category } from '@/types/database'
 
-// Each category gets a unique color scheme
 const categoryColors: Record<string, { bg: string; iconBg: string; iconColor: string; hoverBorder: string }> = {
   'alimentacao': { bg: 'hover:bg-orange-50', iconBg: 'bg-orange-100', iconColor: 'text-orange-600', hoverBorder: 'hover:border-orange-200' },
   'beleza-estetica': { bg: 'hover:bg-pink-50', iconBg: 'bg-pink-100', iconColor: 'text-pink-600', hoverBorder: 'hover:border-pink-200' },
@@ -23,7 +22,13 @@ const categoryColors: Record<string, { bg: string; iconBg: string; iconColor: st
 
 const defaultColors = { bg: 'hover:bg-primary-50', iconBg: 'bg-primary-100', iconColor: 'text-primary-600', hoverBorder: 'hover:border-primary-200' }
 
-export function CategoriesSection() {
+interface CategoriesSectionProps {
+  categories: Category[]
+}
+
+export function CategoriesSection({ categories }: CategoriesSectionProps) {
+  if (categories.length === 0) return null
+
   return (
     <section className="py-16 sm:py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -36,10 +41,10 @@ export function CategoriesSection() {
           </p>
         </div>
 
-        {/* Mobile: Horizontal scroll / Desktop: Grid */}
+        {/* Mobile: Horizontal scroll */}
         <div className="sm:hidden -mx-4 px-4">
           <div className="flex gap-3 overflow-x-auto pb-4 scrollbar-hide snap-x-mandatory">
-            {mockCategories.map((category) => {
+            {categories.map((category) => {
               const colors = categoryColors[category.slug] || defaultColors
               return (
                 <Link
@@ -61,7 +66,7 @@ export function CategoriesSection() {
 
         {/* Desktop: Grid */}
         <div className="hidden sm:grid grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 stagger-children">
-          {mockCategories.map((category) => {
+          {categories.map((category) => {
             const colors = categoryColors[category.slug] || defaultColors
             return (
               <Link

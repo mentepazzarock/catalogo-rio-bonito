@@ -1,10 +1,14 @@
 import Link from 'next/link'
 import { Sparkles } from 'lucide-react'
 import { BusinessCard } from '@/components/business/business-card'
-import { getFeaturedBusinesses } from '@/lib/mock-data'
+import type { BusinessWithDetails } from '@/types/database'
 
-export function FeaturedSection() {
-  const featured = getFeaturedBusinesses()
+interface FeaturedSectionProps {
+  businesses: BusinessWithDetails[]
+}
+
+export function FeaturedSection({ businesses }: FeaturedSectionProps) {
+  if (businesses.length === 0) return null
 
   return (
     <section className="py-16 sm:py-20 bg-slate-50/50">
@@ -38,7 +42,7 @@ export function FeaturedSection() {
         {/* Mobile: Horizontal scroll */}
         <div className="sm:hidden -mx-4 px-4">
           <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x-mandatory">
-            {featured.map((business) => (
+            {businesses.map((business) => (
               <div key={business.id} className="snap-start shrink-0 w-[280px]">
                 <BusinessCard business={business} featured />
               </div>
@@ -48,7 +52,7 @@ export function FeaturedSection() {
 
         {/* Desktop: Grid */}
         <div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 stagger-children">
-          {featured.map((business) => (
+          {businesses.map((business) => (
             <BusinessCard key={business.id} business={business} featured />
           ))}
         </div>
