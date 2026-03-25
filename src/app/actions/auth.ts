@@ -1,6 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase-server'
+import { createAdminClient } from '@/lib/supabase-admin'
 import { redirect } from 'next/navigation'
 import { loginSchema, signupSchema, resetPasswordSchema } from '@/lib/validations'
 import { SITE_URL } from '@/lib/constants'
@@ -22,14 +23,55 @@ export async function login(_prev: AuthResult, formData: FormData): Promise<Auth
   }
 
   const supabase = await createClient()
-  const { error } = await supabase.auth.signInWithPassword(parsed.data)
+  const { data, error } = await supabase.auth.signInWithPassword(parsed.data)
 
   if (error) {
     return { error: 'E-mail ou senha incorretos.' }
   }
 
+  // Garantir que user_profile existe
+  if (data.user) {
+    const admin = createAdminClient()
+    const { data: existingProfile } = await admin
+      .from('user_profiles')
+      .select('id')
+      .eq('id', data.user.id)
+      .single()
+
+    if (!existingProfile) {
+      await admin.from('user_profiles').insert({
+        id: data.user.id,
+        email: data.user.email!,
+        full_name: data.user.user_metadata?.full_name || 'Usuário',
+        role: 'consumer',
+        is_active: true,
+      })
+    }
+  }
+
+  // Redirecionar baseado no contexto
   const redirectTo = formData.get('redirect') as string
-  redirect(redirectTo || '/painel')
+  if (redirectTo) {
+    redirect(redirectTo)
+  }
+
+  // Verificar role para redirecionar corretamente
+  if (data.user) {
+    const admin = createAdminClient()
+    const { data: profile } = await admin
+      .from('user_profiles')
+      .select('role')
+      .eq('id', data.user.id)
+      .single()
+
+    if (profile?.role === 'admin') {
+      redirect('/admin')
+    } else if (profile?.role === 'business_owner') {
+      redirect('/painel')
+    }
+  }
+
+  redirect('/')
 }
 
 export async function signup(_prev: AuthResult, formData: FormData): Promise<AuthResult> {
@@ -45,7 +87,7 @@ export async function signup(_prev: AuthResult, formData: FormData): Promise<Aut
   }
 
   const supabase = await createClient()
-  const { error } = await supabase.auth.signUp({
+  const { data: signUpData, error } = await supabase.auth.signUp({
     email: parsed.data.email,
     password: parsed.data.password,
     options: {
@@ -55,13 +97,42 @@ export async function signup(_prev: AuthResult, formData: FormData): Promise<Aut
   })
 
   if (error) {
-    if (error.message.includes('already registered')) {
-      return { error: 'Este e-mail já está cadastrado.' }
+    console.error('[signup] Supabase auth error:', error.message, error.status)
+    if (error.message.includes('already registered') || error.message.includes('already been registered')) {
+      return { error: 'Este e-mail já está cadastrado. Tente fazer login.' }
     }
-    return { error: 'Erro ao criar conta. Tente novamente.' }
+    if (error.message.includes('rate limit') || error.status === 429) {
+      return { error: 'Muitas tentativas. Aguarde alguns minutos e tente novamente.' }
+    }
+    if (error.message.includes('not authorized') || error.message.includes('not allowed')) {
+      return { error: 'Cadastro temporariamente indisponível. Tente novamente mais tarde.' }
+    }
+    return { error: `Erro ao criar conta: ${error.message}` }
   }
 
-  return { success: 'Conta criada! Verifique seu e-mail para confirmar.' }
+  // Supabase pode retornar user sem erro mas com identities vazio = email já existe
+  if (signUpData.user && signUpData.user.identities?.length === 0) {
+    return { error: 'Este e-mail já está cadastrado. Tente fazer login.' }
+  }
+
+  // Criar user_profile imediatamente com service role (bypassa RLS)
+  if (signUpData.user) {
+    try {
+      const admin = createAdminClient()
+      await admin.from('user_profiles').upsert({
+        id: signUpData.user.id,
+        email: parsed.data.email,
+        full_name: parsed.data.name,
+        role: 'consumer',
+        is_active: true,
+      })
+    } catch (profileError) {
+      console.error('[signup] Profile creation error:', profileError)
+      // Não falhar o signup se o profile não for criado - será criado no login
+    }
+  }
+
+  return { success: 'Conta criada com sucesso! Verifique seu e-mail para confirmar o cadastro.' }
 }
 
 export async function logout() {

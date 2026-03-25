@@ -29,7 +29,8 @@ const categoryGradients: Record<string, string> = {
 }
 
 export function BusinessCard({ business, featured = false }: BusinessCardProps) {
-  const open = isOpenNow(business.hours)
+  const hours = Array.isArray(business.hours) ? business.hours : []
+  const open = isOpenNow(hours)
   const category = business.categories[0]
   const hasPromotion = business.promotions.some((p) => p.is_active)
   const gradient = category ? (categoryGradients[category.slug] || 'from-primary-500 to-primary-700') : 'from-slate-400 to-slate-600'

@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     title: `${SITE_NAME} - O guia da cidade`,
     description: SITE_DESCRIPTION,
   },
-  themeColor: '#ea580c', // primary-600
+  themeColor: '#2563eb', // primary-600
 }
 
 export default async function RootLayout({

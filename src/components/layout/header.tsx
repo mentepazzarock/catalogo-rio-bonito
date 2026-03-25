@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useState, useRef, useEffect } from 'react'
-import { Search, Menu, X, MapPin, Plus, LogIn, ChevronDown, Store, Shield, LayoutDashboard, User, LogOut } from 'lucide-react'
+import { Search, Menu, X, MapPin, Plus, LogIn, ChevronDown, Store, Shield, LayoutDashboard, User, LogOut, Heart } from 'lucide-react'
 import { SITE_NAME } from '@/lib/constants'
 
 interface HeaderUser {
@@ -76,8 +76,11 @@ export function Header({ user }: HeaderProps) {
               </button>
               {empresasOpen && (
                 <div className="absolute right-0 top-full mt-1 w-56 rounded-xl bg-white/95 backdrop-blur-lg border border-slate-200 shadow-xl shadow-slate-200/50 py-2 animate-scale-in z-50">
-                  <Link href="/para-empresas" onClick={() => setEmpresasOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-primary-50 hover:text-primary-700 transition-colors">
+                  <Link href="/cadastro-empresa" onClick={() => setEmpresasOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-primary-50 hover:text-primary-700 transition-colors">
                     <Plus className="h-4 w-4 text-primary-500" />Cadastrar Negocio
+                  </Link>
+                  <Link href="/para-empresas" onClick={() => setEmpresasOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-primary-50 hover:text-primary-700 transition-colors">
+                    <Store className="h-4 w-4 text-warm-500" />Ver Planos
                   </Link>
                   {isOwner && (
                     <Link href="/painel" onClick={() => setEmpresasOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-primary-50 hover:text-primary-700 transition-colors">
@@ -115,11 +118,17 @@ export function Header({ user }: HeaderProps) {
                     <Link href="/conta" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition-colors">
                       <User className="h-4 w-4 text-slate-400" />Minha Conta
                     </Link>
-                    <form action="/api/auth/signout" method="POST">
-                      <button type="button" onClick={() => { setUserMenuOpen(false); window.location.href = '/login' }} className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors">
-                        <LogOut className="h-4 w-4" />Sair
-                      </button>
-                    </form>
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        setUserMenuOpen(false)
+                        const { logout } = await import('@/app/actions/auth')
+                        await logout()
+                      }}
+                      className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                    >
+                      <LogOut className="h-4 w-4" />Sair
+                    </button>
                   </div>
                 )}
               </div>
@@ -172,7 +181,7 @@ export function Header({ user }: HeaderProps) {
               </Link>
             )}
             <div className="pt-2 space-y-2">
-              <Link href="/para-empresas" onClick={() => setMobileMenuOpen(false)} className="flex items-center justify-center gap-2 w-full rounded-xl bg-primary-600 px-4 py-3 text-sm font-semibold text-white hover:bg-primary-700 transition-colors active:scale-[0.98]">
+              <Link href="/cadastro-empresa" onClick={() => setMobileMenuOpen(false)} className="flex items-center justify-center gap-2 w-full rounded-xl bg-primary-600 px-4 py-3 text-sm font-semibold text-white hover:bg-primary-700 transition-colors active:scale-[0.98]">
                 <Plus className="h-4 w-4" />Cadastrar Meu Negocio
               </Link>
               {!user && (

@@ -36,6 +36,22 @@ export const businessSchema = z.object({
   zip_code: z.string().max(10).optional(),
 })
 
+// ── Business Registration (self-service) ──
+
+export const businessRegistrationSchema = z.object({
+  name: z.string().min(2, 'Nome do negócio deve ter pelo menos 2 caracteres').max(100),
+  type: z.enum(['store', 'service_provider'], { message: 'Selecione o tipo do negócio' }),
+  description: z.string().min(10, 'Descrição deve ter pelo menos 10 caracteres').max(2000),
+  phone: z.string().min(10, 'Telefone inválido').max(20).optional().or(z.literal('')),
+  whatsapp: z.string().max(20).optional().or(z.literal('')),
+  email: z.string().email('E-mail inválido').optional().or(z.literal('')),
+  address: z.string().max(200).optional().or(z.literal('')),
+  neighborhood: z.string().max(100).optional().or(z.literal('')),
+  category_id: z.string().uuid('Selecione uma categoria'),
+})
+
+export type BusinessRegistrationInput = z.infer<typeof businessRegistrationSchema>
+
 // ── Review ──
 
 export const reviewSchema = z.object({

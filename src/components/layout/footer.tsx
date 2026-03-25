@@ -56,7 +56,7 @@ export function Footer() {
             <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-4">Para Empresas</h3>
             <ul className="space-y-2.5">
               {[
-                { name: 'Cadastrar Negócio', href: '/cadastro' },
+                { name: 'Cadastrar Negócio', href: '/cadastro-empresa' },
                 { name: 'Painel do Lojista', href: '/painel' },
                 { name: 'Painel Admin', href: '/admin' },
                 { name: 'Login', href: '/login' },

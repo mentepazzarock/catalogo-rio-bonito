@@ -50,7 +50,8 @@ export default async function BusinessPage({ params }: PageProps) {
 
   if (!business) notFound()
 
-  const open = isOpenNow(business.hours)
+  const hoursArray = Array.isArray(business.hours) ? business.hours : []
+  const open = isOpenNow(hoursArray)
   const category = business.categories[0]
   const gradientClass = getCategoryGradient(category?.slug)
   const activePromotions = business.promotions.filter((p: { is_active: boolean }) => p.is_active)

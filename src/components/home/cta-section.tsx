@@ -6,7 +6,7 @@ export function CTASection() {
     <section className="py-16 sm:py-20 bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900 relative overflow-hidden">
       {/* Background decorations */}
       <div className="absolute inset-0">
-        <div className="absolute top-1/4 right-0 w-96 h-96 bg-warm-400/10 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 right-0 w-96 h-96 bg-primary-400/15 rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-1/4 w-80 h-80 bg-accent-400/10 rounded-full blur-3xl" />
       </div>
 
@@ -16,7 +16,7 @@ export function CTASection() {
             Aproveite o melhor de Rio Bonito
           </h2>
           <p className="text-lg text-primary-100 max-w-2xl mx-auto">
-            Crie sua conta gratuita para salvar seus locais favoritos, deixar avaliações e receber ofertas exclusivas.
+            Crie sua conta gratuita para salvar seus locais favoritos, deixar avaliacoes e receber ofertas exclusivas.
           </p>
         </div>
 
@@ -41,24 +41,24 @@ export function CTASection() {
 
         <div className="text-center flex flex-col items-center">
           <Link
-            href="/cadastro"
+            href="/login"
             className="inline-flex items-center gap-2 rounded-2xl bg-white px-8 py-4 text-base font-bold text-primary-700 hover:bg-primary-50 transition-colors shadow-xl shadow-primary-900/30 active:scale-[0.98]"
           >
             <MapPin className="h-5 w-5" />
-            Criar Minha Conta Grátis
+            Criar Minha Conta Gratis
             <ArrowRight className="h-5 w-5" />
           </Link>
 
-          <div className="mt-12 pt-6 border-t border-white/10 flex items-center justify-center gap-2">
+          <div className="mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-center gap-2">
             <span className="text-sm text-primary-200">
-              Você é dono(a) de um negócio?
+              Voce e dono(a) de um negocio?
             </span>
             <Link
-              href="/para-empresas"
-              className="text-sm font-bold text-white hover:text-warm-300 transition-colors flex items-center gap-1 group"
+              href="/cadastro-empresa"
+              className="text-sm font-bold text-white hover:text-accent-300 transition-colors flex items-center gap-1 group"
             >
               <Building2 className="h-4 w-4" />
-              Anuncie aqui no Catálogo
+              Cadastre seu negocio aqui
               <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
             </Link>
           </div>

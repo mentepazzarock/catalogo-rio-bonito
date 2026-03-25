@@ -3,14 +3,14 @@
 import { useState, useActionState } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-import { Eye, EyeOff, MapPin, ArrowRight, Sparkles, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react'
+import { Eye, EyeOff, MapPin, ArrowRight, Sparkles, Loader2, AlertCircle, CheckCircle2, Shield } from 'lucide-react'
 import { login, signup, resetPassword, loginWithOAuth, type AuthResult } from '@/app/actions/auth'
 
 const initialState: AuthResult = {}
 
 export default function LoginPage() {
   const searchParams = useSearchParams()
-  const redirectTo = searchParams.get('redirect') || ''
+  const redirectTo = searchParams.get('redirect') || '/'
   const authError = searchParams.get('error')
 
   const [mode, setMode] = useState<'login' | 'signup' | 'reset'>('login')
@@ -34,7 +34,7 @@ export default function LoginPage() {
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 shadow-md shadow-primary-200/50">
               <MapPin className="h-5 w-5 text-white" />
             </div>
-            <span className="text-xl font-bold text-slate-900">Catálogo RB</span>
+            <span className="text-xl font-bold text-slate-900">Catalogo RB</span>
           </Link>
 
           <h1 className="text-3xl font-extrabold text-slate-900 mb-2">
@@ -43,8 +43,8 @@ export default function LoginPage() {
             {mode === 'reset' && 'Recuperar senha'}
           </h1>
           <p className="text-base text-slate-500 mb-8">
-            {mode === 'login' && 'Acesse sua conta para gerenciar seu negócio'}
-            {mode === 'signup' && 'Cadastre-se para começar a usar o Catálogo'}
+            {mode === 'login' && 'Acesse sua conta para explorar Rio Bonito'}
+            {mode === 'signup' && 'Cadastre-se para salvar favoritos, avaliar e mais'}
             {mode === 'reset' && 'Enviaremos um link para redefinir sua senha'}
           </p>
 
@@ -52,7 +52,7 @@ export default function LoginPage() {
           {(currentState.error || authError) && (
             <div className="mb-4 flex items-center gap-2 rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
               <AlertCircle className="h-4 w-4 shrink-0" />
-              {currentState.error || 'Falha na autenticação. Tente novamente.'}
+              {currentState.error || 'Falha na autenticacao. Tente novamente.'}
             </div>
           )}
           {currentState.success && (
@@ -154,7 +154,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isPending}
-              className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary-600 to-primary-700 py-3 text-sm font-bold text-white hover:from-primary-700 hover:to-primary-800 transition-all shadow-sm shadow-primary-200/50 disabled:opacity-70 disabled:cursor-not-allowed active:scale-[0.98]"
+              className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary-600 to-primary-700 py-3 text-sm font-bold text-white hover:from-primary-700 hover:to-primary-800 transition-all shadow-lg shadow-primary-600/25 disabled:opacity-70 disabled:cursor-not-allowed active:scale-[0.98]"
             >
               {isPending ? (
                 <>
@@ -163,9 +163,9 @@ export default function LoginPage() {
                 </>
               ) : (
                 <>
-                  {mode === 'login' && 'Entrar no painel'}
+                  {mode === 'login' && 'Entrar'}
                   {mode === 'signup' && 'Criar minha conta'}
-                  {mode === 'reset' && 'Enviar link de recuperação'}
+                  {mode === 'reset' && 'Enviar link de recuperacao'}
                   <ArrowRight className="h-4 w-4" />
                 </>
               )}
@@ -221,16 +221,18 @@ export default function LoginPage() {
       {/* Right: Decorative panel */}
       <div className="hidden lg:flex lg:w-[45%] bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900 relative overflow-hidden items-center justify-center">
         <div className="absolute inset-0">
-          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-warm-400/20 rounded-full blur-3xl" />
+          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary-400/20 rounded-full blur-3xl" />
           <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-accent-400/15 rounded-full blur-3xl" />
         </div>
         <div className="relative text-center px-12 max-w-md">
-          <Sparkles className="h-12 w-12 text-warm-300 mx-auto mb-6 animate-float" />
+          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 mx-auto mb-6">
+            <Shield className="h-8 w-8 text-white" />
+          </div>
           <h2 className="text-3xl font-extrabold text-white mb-4">
-            Seu negócio no mapa digital
+            Seu negocio no mapa digital
           </h2>
           <p className="text-primary-100 leading-relaxed">
-            Mais de 50 negócios já usam o Catálogo RB para serem encontrados.
+            Mais de 50 negocios ja usam o Catalogo RB para serem encontrados.
             Cadastre-se e alcance novos clientes todos os dias.
           </p>
           <div className="mt-8 inline-flex items-center gap-2 rounded-full bg-white/10 border border-white/20 px-5 py-2 text-sm font-medium text-white shadow-lg backdrop-blur-sm">

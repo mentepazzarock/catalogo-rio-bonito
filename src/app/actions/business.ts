@@ -1,9 +1,11 @@
 'use server'
 
 import { createClient } from '@/lib/supabase-server'
+import { createAdminClient } from '@/lib/supabase-admin'
 import { requireAuth, requireBusinessOwner } from '@/lib/dal'
 import { revalidatePath } from 'next/cache'
-import { reviewSchema, reviewReplySchema, leadSchema, productSchema, promotionSchema } from '@/lib/validations'
+import { redirect } from 'next/navigation'
+import { reviewSchema, reviewReplySchema, leadSchema, productSchema, promotionSchema, businessRegistrationSchema } from '@/lib/validations'
 
 export type ActionResult = {
   error?: string
@@ -213,6 +215,90 @@ export async function toggleFavorite(businessId: string): Promise<ActionResult> 
     })
     return { success: 'Adicionado aos favoritos!' }
   }
+}
+
+// ── Register Business (self-service) ──
+
+export async function registerBusiness(_prev: ActionResult, formData: FormData): Promise<ActionResult> {
+  const user = await requireAuth()
+
+  const raw = {
+    name: formData.get('name') as string,
+    type: formData.get('type') as string,
+    description: formData.get('description') as string,
+    phone: formData.get('phone') as string || undefined,
+    whatsapp: formData.get('whatsapp') as string || undefined,
+    email: formData.get('email') as string || undefined,
+    address: formData.get('address') as string || undefined,
+    neighborhood: formData.get('neighborhood') as string || undefined,
+    category_id: formData.get('category_id') as string,
+  }
+
+  const parsed = businessRegistrationSchema.safeParse(raw)
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0].message }
+  }
+
+  // Gerar slug a partir do nome
+  const slug = parsed.data.name
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^\w\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .trim()
+
+  const uniqueSlug = `${slug}-${Date.now().toString(36)}`
+
+  const admin = createAdminClient()
+
+  // Criar o negócio (pendente de aprovação)
+  const { data: business, error: bizError } = await admin
+    .from('businesses')
+    .insert({
+      owner_id: user.id,
+      name: parsed.data.name,
+      slug: uniqueSlug,
+      type: parsed.data.type,
+      description: parsed.data.description,
+      phone: parsed.data.phone || null,
+      whatsapp: parsed.data.whatsapp || null,
+      email: parsed.data.email || null,
+      address: parsed.data.address || 'Rio Bonito',
+      neighborhood: parsed.data.neighborhood || null,
+      city: 'Rio Bonito',
+      state: 'RJ',
+      subscription_plan: 'basic',
+      subscription_status: 'trial',
+      is_active: false,
+      is_approved: false,
+      is_featured: false,
+      is_verified: false,
+    })
+    .select('id')
+    .single()
+
+  if (bizError) {
+    return { error: 'Erro ao cadastrar negócio. Tente novamente.' }
+  }
+
+  // Vincular categoria
+  if (business && parsed.data.category_id) {
+    await admin.from('business_categories').insert({
+      business_id: business.id,
+      category_id: parsed.data.category_id,
+    })
+  }
+
+  // Atualizar role do usuário para business_owner
+  await admin
+    .from('user_profiles')
+    .update({ role: 'business_owner' })
+    .eq('id', user.id)
+
+  revalidatePath('/')
+  redirect('/painel')
 }
 
 // ── Update Business Profile ──

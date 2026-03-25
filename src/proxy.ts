@@ -33,7 +33,8 @@ export async function proxy(request: NextRequest) {
   const isProtectedRoute =
     pathname.startsWith('/admin') ||
     pathname.startsWith('/painel') ||
-    pathname.startsWith('/conta')
+    pathname.startsWith('/conta') ||
+    pathname.startsWith('/cadastro-empresa')
 
   // Redirect unauthenticated users to login
   if (isProtectedRoute && !user) {
@@ -47,7 +48,7 @@ export async function proxy(request: NextRequest) {
   const isAuthRoute = pathname === '/login' || pathname === '/cadastro'
   if (isAuthRoute && user) {
     const url = request.nextUrl.clone()
-    url.pathname = '/painel'
+    url.pathname = '/'
     return NextResponse.redirect(url)
   }
 
@@ -59,6 +60,7 @@ export const config = {
     '/admin/:path*',
     '/painel/:path*',
     '/conta/:path*',
+    '/cadastro-empresa',
     '/login',
     '/cadastro',
   ],

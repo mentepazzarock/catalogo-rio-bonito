@@ -44,14 +44,6 @@ function mapBusiness(raw: Record<string, unknown>): BusinessWithDetails {
     .filter(Boolean) ?? []
   const hours = (raw.business_hours as Record<string, unknown>[]) ?? []
 
-  const hoursMap: Record<string, { open: string; close: string }> = {}
-  for (const h of hours) {
-    hoursMap[h.day_of_week as string] = {
-      open: h.open_time as string,
-      close: h.close_time as string,
-    }
-  }
-
   return {
     ...raw,
     categories,
@@ -59,7 +51,7 @@ function mapBusiness(raw: Record<string, unknown>): BusinessWithDetails {
     services: (raw.service_items as unknown[]) ?? [],
     reviews: (raw.reviews as unknown[]) ?? [],
     promotions: (raw.promotions as unknown[]) ?? [],
-    hours: hoursMap,
+    hours,
   } as unknown as BusinessWithDetails
 }
 
@@ -178,7 +170,7 @@ export const getActivePromotions = cache(async (limit = 6) => {
     .from('promotions')
     .select('*, business:businesses(name, slug, type)')
     .eq('is_active', true)
-    .gte('end_date', new Date().toISOString())
+    .gte('ends_at', new Date().toISOString())
     .order('created_at', { ascending: false })
     .limit(limit)
   return data ?? []

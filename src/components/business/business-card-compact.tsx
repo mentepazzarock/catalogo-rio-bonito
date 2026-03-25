@@ -10,7 +10,8 @@ interface BusinessCardCompactProps {
 }
 
 export function BusinessCardCompact({ business }: BusinessCardCompactProps) {
-    const open = isOpenNow(business.hours)
+    const hours = Array.isArray(business.hours) ? business.hours : []
+    const open = isOpenNow(hours)
     const category = business.categories[0]
     const hasPromotion = business.promotions.some((p) => p.is_active)
 
