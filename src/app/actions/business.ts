@@ -269,6 +269,8 @@ export async function registerBusiness(_prev: ActionResult, formData: FormData):
       neighborhood: parsed.data.neighborhood || null,
       city: 'Rio Bonito',
       state: 'RJ',
+      latitude: -22.7114,
+      longitude: -42.6267,
       subscription_plan: 'basic',
       subscription_status: 'trial',
       is_active: false,
@@ -291,11 +293,19 @@ export async function registerBusiness(_prev: ActionResult, formData: FormData):
     })
   }
 
-  // Atualizar role do usuário para business_owner
-  await admin
+  // Promover para business_owner somente se for consumer (nunca rebaixar admin)
+  const { data: currentProfile } = await admin
     .from('user_profiles')
-    .update({ role: 'business_owner' })
+    .select('role')
     .eq('id', user.id)
+    .single()
+
+  if (currentProfile?.role === 'consumer') {
+    await admin
+      .from('user_profiles')
+      .update({ role: 'business_owner' })
+      .eq('id', user.id)
+  }
 
   revalidatePath('/')
   redirect('/painel')

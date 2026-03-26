@@ -2,7 +2,8 @@ import Link from 'next/link'
 import { MapPin, Clock, BadgeCheck, Star, Tag } from 'lucide-react'
 import { CategoryIcon } from '@/components/ui/icon-map'
 import { FavoriteButton } from '@/components/ui/favorite-button'
-import { formatPhone, isOpenNow, getInitials } from '@/lib/utils'
+import { DistanceBadge } from '@/components/ui/distance-badge'
+import { isOpenNow, getInitials } from '@/lib/utils'
 import type { BusinessWithDetails } from '@/types/database'
 
 interface BusinessCardCompactProps {
@@ -65,6 +66,7 @@ export function BusinessCardCompact({ business }: BusinessCardCompactProps) {
                         <MapPin className="h-3 w-3 text-slate-400" />
                         <span className="truncate">{business.neighborhood || 'Centro'}</span>
                     </span>
+                    <DistanceBadge latitude={business.latitude} longitude={business.longitude} />
                 </div>
             </div>
 

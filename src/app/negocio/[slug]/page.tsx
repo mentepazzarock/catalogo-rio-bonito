@@ -18,6 +18,7 @@ import {
 import { StarRating } from '@/components/ui/star-rating'
 import { Badge } from '@/components/ui/badge'
 import { CategoryIcon } from '@/components/ui/icon-map'
+import { DistanceBadge } from '@/components/ui/distance-badge'
 import { MotionWrapper } from '@/components/ui/motion-wrapper'
 import { getBusinessBySlug } from '@/lib/queries'
 import { formatPhone, formatCurrency, formatWhatsAppUrl, isOpenNow } from '@/lib/utils'
@@ -111,10 +112,11 @@ export default async function BusinessPage({ params }: PageProps) {
                   <StarRating rating={business.average_rating} size={18} showValue totalReviews={business.total_reviews} />
                 </div>
 
-                <p className="text-sm text-slate-500 flex items-center gap-1.5">
+                <div className="text-sm text-slate-500 flex items-center gap-1.5">
                   <MapPin className="h-4 w-4 shrink-0" />
-                  {business.address} - {business.city}, {business.state}
-                </p>
+                  <span>{business.address} - {business.city}, {business.state}</span>
+                  <DistanceBadge latitude={business.latitude} longitude={business.longitude} />
+                </div>
               </div>
             </div>
 

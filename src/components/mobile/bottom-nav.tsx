@@ -26,7 +26,7 @@ export function BottomNav() {
       icon: Heart,
       badge: mounted && favorites.length > 0 ? favorites.length : 0
     },
-    { href: '/perfil', label: 'Perfil', icon: User },
+    { href: '/conta', label: 'Conta', icon: User },
   ]
 
   // Hide on admin routes, painel routes, and login
@@ -43,51 +43,47 @@ export function BottomNav() {
   return (
     <>
       <div className="h-[calc(4rem+env(safe-area-inset-bottom))] md:hidden" />
-      <nav className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-white/85 backdrop-blur-xl border-t border-slate-200/60 pb-safe">
-        <div className="flex h-16 items-center justify-around px-2">
+      <nav className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-white/90 backdrop-blur-xl border-t border-slate-200/80 pb-safe">
+        <div className="flex h-14 items-center justify-around px-2">
           {navItems.map((item) => {
-            const isActive = pathname === item.href
+            const isActive = item.href === '/'
+              ? pathname === '/'
+              : pathname.startsWith(item.href)
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className="relative flex h-full w-full flex-col items-center justify-center gap-1 tap-highlight-transparent"
+                className="relative flex h-full w-full flex-col items-center justify-center gap-0.5 tap-highlight-transparent"
               >
                 <motion.div
                   whileTap={{ scale: 0.85 }}
                   className={cn(
-                    'flex flex-col items-center justify-center gap-1 w-full h-full transition-colors relative',
-                    isActive ? 'text-primary-600' : 'text-slate-400 hover:text-slate-600'
+                    'flex flex-col items-center justify-center gap-0.5 w-full h-full transition-colors relative',
+                    isActive ? 'text-primary-600' : 'text-slate-400'
                   )}
                 >
                   <div className="relative">
                     <item.icon
                       className={cn(
-                        'h-5 w-5 transition-all duration-300',
-                        isActive && 'scale-110 mb-0.5',
-                        isActive && item.href === '/favoritos' && 'fill-rose-500 text-rose-500' // Make heart robust if active
+                        'h-5 w-5 transition-all duration-200',
+                        isActive && item.href === '/favoritos' && 'fill-rose-500 text-rose-500'
                       )}
                     />
                     {item.badge ? (
-                      <span className="absolute -top-1.5 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[9px] font-bold text-white shadow-sm ring-2 ring-white">
+                      <span className="absolute -top-1.5 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[9px] font-bold text-white ring-2 ring-white">
                         {item.badge}
                       </span>
                     ) : null}
                   </div>
 
-                  <span
-                    className={cn(
-                      'text-[10px] font-medium transition-all duration-300',
-                      isActive ? 'opacity-100 mt-0.5' : 'opacity-80'
-                    )}
-                  >
+                  <span className="text-[10px] font-medium">
                     {item.label}
                   </span>
 
                   {isActive && (
                     <motion.div
                       layoutId="bottom-nav-indicator"
-                      className="absolute -top-[1px] left-1/2 h-[3px] w-12 -translate-x-1/2 rounded-b-full bg-primary-600 shadow-[0_2px_8px_rgba(234,88,12,0.4)]"
+                      className="absolute -top-[1px] left-1/2 h-[2.5px] w-10 -translate-x-1/2 rounded-b-full bg-primary-600"
                       initial={false}
                       transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                     />

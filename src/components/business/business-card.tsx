@@ -4,6 +4,7 @@ import { StarRating } from '@/components/ui/star-rating'
 import { Badge } from '@/components/ui/badge'
 import { CategoryIcon } from '@/components/ui/icon-map'
 import { FavoriteButton } from '@/components/ui/favorite-button'
+import { DistanceBadge } from '@/components/ui/distance-badge'
 import { formatPhone, isOpenNow, getInitials } from '@/lib/utils'
 import type { BusinessWithDetails } from '@/types/database'
 
@@ -121,6 +122,7 @@ export function BusinessCard({ business, featured = false }: BusinessCardProps) 
           <div className="flex items-center gap-2 text-xs text-slate-500">
             <MapPin className="h-3.5 w-3.5 text-slate-400 shrink-0" />
             <span className="truncate">{business.neighborhood || business.address}</span>
+            <DistanceBadge latitude={business.latitude} longitude={business.longitude} />
           </div>
           {business.phone && (
             <div className="flex items-center gap-2 text-xs text-slate-500">

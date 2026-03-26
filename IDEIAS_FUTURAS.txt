@@ -1,0 +1,109 @@
+============================================
+  CATÁLOGO RIO BONITO - IDEIAS PARA IMPLEMENTAR
+  Criado em: 25/03/2026
+============================================
+
+[PRIORIDADE ALTA]
+
+1. GEOLOCALIZAÇÃO "PERTO DE MIM"
+   - Ordenar negócios por distância real do usuário
+   - Usar Geolocation API do browser (grátis, sem Google API)
+   - Cálculo de distância com fórmula de Haversine
+   - STATUS: IMPLEMENTADO ✓
+
+2. SELO "VERIFICADO"
+   - Badge de verificação para negócios que pagam premium/pro
+   - Gera confiança no consumidor
+   - Campo is_verified já existe no banco
+
+3. STORIES DE NEGÓCIOS
+   - Carousel no topo da home (estilo Instagram)
+   - Lojistas postam fotos/promoções do dia
+   - Expira em 24h
+   - Precisa: tabela business_stories, upload de imagem, componente carousel
+
+4. FILTRO "ABERTO AGORA" FUNCIONAL
+   - Quick filter na busca que filtra por horário real
+   - STATUS: IMPLEMENTADO ✓ (via query string /buscar?aberto=true)
+
+5. AVALIAÇÃO COM FOTOS
+   - Consumidores enviam fotos junto com reviews
+   - Prova social forte (tipo Google Maps reviews)
+   - Precisa: upload de imagem, campo photos na tabela reviews
+
+6. QR CODE POR NEGÓCIO
+   - Cada negócio gera um QR Code automático
+   - Lojista imprime e coloca no balcão/vitrine
+   - Cliente escaneia e vai direto pro perfil no catálogo
+   - Pode usar lib qrcode.js (client-side, sem API)
+
+[PRIORIDADE MÉDIA]
+
+7. RANKING SEMANAL
+   - "Top 10 mais visitados da semana"
+   - Gamificação: medalhas de ouro/prata/bronze
+   - Usa dados da tabela business_views
+   - Incentiva lojistas a divulgar o perfil
+
+8. CUPOM EXCLUSIVO DO CATÁLOGO
+   - Desconto só pra quem acessa pelo app/site
+   - Incentiva uso recorrente da plataforma
+   - Diferencial: "use o código CATALOGORB para 10% off"
+
+9. COMPARTILHAR NEGÓCIO
+   - Botão share nativo do celular (Web Share API)
+   - Funciona em Android e iOS
+   - Compartilha link + nome + descrição curta
+   - Simples de implementar, alto impacto
+
+10. PÁGINA DE "NOVIDADES"
+    - Feed cronológico de novos negócios cadastrados
+    - "Veja o que abriu essa semana em Rio Bonito"
+    - Puxa da tabela businesses ordenado por created_at
+
+[PRIORIDADE BAIXA / FUTURO]
+
+11. NOTIFICAÇÃO DE PROMOÇÕES
+    - Push notification quando um negócio favorito cria promoção
+    - Precisa: Service Worker, Push API, tabela de subscriptions
+    - Complexidade alta, deixar pro futuro
+
+12. MODO ESCURO
+    - Toggle no header, salva preferência no localStorage
+    - TailwindCSS dark mode
+    - Nice to have, não essencial pro público-alvo
+
+[MELHORIAS TÉCNICAS PENDENTES]
+
+13. UPLOAD DE IMAGENS
+    - Supabase Storage para fotos de negócios, produtos, banners
+    - Essencial pra tudo ficar mais profissional
+    - Bloqueador para: stories, avaliação com fotos, banners reais
+
+14. WIRING DOS FORMS DO PAINEL
+    - Salvar perfil do negócio (botão existe, sem submit)
+    - Editar/excluir produtos (botões existem, sem handler)
+    - Editar/excluir promoções (botões existem, sem handler)
+    - Salvar horários de funcionamento
+
+15. FIX BUGS CONHECIDOS
+    - Reply de review usa campo errado (owner_reply vs reply)
+    - Criar promoção usa campos errados (start_date vs starts_at)
+
+16. INTEGRAÇÃO DE PAGAMENTO
+    - Stripe ou PIX para assinaturas
+    - Necessário para monetização real
+
+17. MAPA INTERATIVO (PRECISA GOOGLE MAPS API)
+    - Mapa com pins de todos os negócios
+    - Autocompletar endereço no cadastro
+    - Geocoding de endereço para lat/lng
+    - Custo: ~$200/mês dependendo do volume
+
+============================================
+  NOTAS
+============================================
+- A geolocalização NÃO precisa de Google Maps API (usa browser nativo)
+- O botão "Rota" na página do negócio abre Google Maps via link (grátis)
+- Supabase free tier tem limite de 1GB storage
+- Features 1 e 4 já foram implementadas em 25/03/2026

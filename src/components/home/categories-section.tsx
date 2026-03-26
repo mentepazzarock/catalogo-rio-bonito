@@ -30,73 +30,77 @@ export function CategoriesSection({ categories }: CategoriesSectionProps) {
   if (categories.length === 0) return null
 
   return (
-    <section className="py-16 sm:py-20">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-10">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
-            Explore por Categoria
-          </h2>
-          <p className="mt-2 text-base text-slate-500">
-            Encontre exatamente o que você precisa
-          </p>
-        </div>
-
-        {/* Mobile: Horizontal scroll */}
-        <div className="sm:hidden -mx-4 px-4">
-          <div className="flex gap-3 overflow-x-auto pb-4 scrollbar-hide snap-x-mandatory">
+    <>
+      {/* ═══ MOBILE: Single scrollable row of small icons ═══ */}
+      <section className="sm:hidden py-3">
+        <div className="-mx-0 px-4">
+          <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-1">
             {categories.map((category) => {
               const colors = categoryColors[category.slug] || defaultColors
               return (
                 <Link
                   key={category.id}
                   href={`/buscar?categoria=${category.slug}`}
-                  className={`snap-start shrink-0 flex flex-col items-center gap-2.5 rounded-2xl bg-white border border-slate-100 p-4 w-24 ${colors.hoverBorder} ${colors.bg} transition-all duration-300 active:scale-95`}
+                  className="flex flex-col items-center gap-1 shrink-0 active:scale-95 transition-transform w-14"
                 >
-                  <div className={`flex h-12 w-12 items-center justify-center rounded-2xl ${colors.iconBg}`}>
-                    <CategoryIcon name={category.icon} className={`h-6 w-6 ${colors.iconColor}`} />
+                  <div className={`flex h-11 w-11 items-center justify-center rounded-full ${colors.iconBg}`}>
+                    <CategoryIcon name={category.icon} className={`h-5 w-5 ${colors.iconColor}`} />
                   </div>
-                  <span className="text-[11px] font-semibold text-slate-700 text-center leading-tight">
-                    {category.name}
+                  <span className="text-[9px] font-medium text-slate-500 text-center leading-tight line-clamp-1 w-full">
+                    {category.name.split(' & ')[0].split(' ')[0]}
                   </span>
                 </Link>
               )
             })}
           </div>
         </div>
+      </section>
 
-        {/* Desktop: Grid */}
-        <div className="hidden sm:grid grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 stagger-children">
-          {categories.map((category) => {
-            const colors = categoryColors[category.slug] || defaultColors
-            return (
-              <Link
-                key={category.id}
-                href={`/buscar?categoria=${category.slug}`}
-                className={`group flex flex-col items-center gap-3 rounded-2xl bg-white border border-slate-100 p-4 sm:p-5 ${colors.hoverBorder} hover:shadow-md transition-all duration-300 hover:-translate-y-0.5 ${colors.bg}`}
-              >
-                <div className={`flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl ${colors.iconBg} group-hover:scale-105 transition-all duration-300`}>
-                  <CategoryIcon name={category.icon} className={`h-6 w-6 sm:h-7 sm:w-7 ${colors.iconColor}`} />
-                </div>
-                <span className="text-xs sm:text-sm font-semibold text-slate-700 text-center leading-tight group-hover:text-slate-900 transition-colors">
-                  {category.name}
-                </span>
-              </Link>
-            )
-          })}
-        </div>
+      {/* ═══ DESKTOP: Grid cards ═══ */}
+      <section className="hidden sm:block py-16 sm:py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
+              Explore por Categoria
+            </h2>
+            <p className="mt-2 text-base text-slate-500">
+              Encontre exatamente o que você precisa
+            </p>
+          </div>
 
-        <div className="text-center mt-8">
-          <Link
-            href="/categorias"
-            className="inline-flex items-center gap-1 text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors"
-          >
-            Ver todas as categorias
-            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </Link>
+          <div className="grid grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 stagger-children">
+            {categories.map((category) => {
+              const colors = categoryColors[category.slug] || defaultColors
+              return (
+                <Link
+                  key={category.id}
+                  href={`/buscar?categoria=${category.slug}`}
+                  className={`group flex flex-col items-center gap-3 rounded-2xl bg-white border border-slate-100 p-4 sm:p-5 ${colors.hoverBorder} hover:shadow-md transition-all duration-300 hover:-translate-y-0.5 ${colors.bg}`}
+                >
+                  <div className={`flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl ${colors.iconBg} group-hover:scale-105 transition-all duration-300`}>
+                    <CategoryIcon name={category.icon} className={`h-6 w-6 sm:h-7 sm:w-7 ${colors.iconColor}`} />
+                  </div>
+                  <span className="text-xs sm:text-sm font-semibold text-slate-700 text-center leading-tight group-hover:text-slate-900 transition-colors">
+                    {category.name}
+                  </span>
+                </Link>
+              )
+            })}
+          </div>
+
+          <div className="text-center mt-8">
+            <Link
+              href="/categorias"
+              className="inline-flex items-center gap-1 text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors"
+            >
+              Ver todas as categorias
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   )
 }

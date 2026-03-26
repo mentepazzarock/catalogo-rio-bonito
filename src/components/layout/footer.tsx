@@ -57,8 +57,7 @@ export function Footer() {
             <ul className="space-y-2.5">
               {[
                 { name: 'Cadastrar Negócio', href: '/cadastro-empresa' },
-                { name: 'Painel do Lojista', href: '/painel' },
-                { name: 'Painel Admin', href: '/admin' },
+                { name: 'Ver Planos', href: '/para-empresas' },
                 { name: 'Login', href: '/login' },
               ].map((link) => (
                 <li key={link.name}>
